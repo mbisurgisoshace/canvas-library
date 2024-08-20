@@ -72,9 +72,7 @@ export default function Canvas(props: CanvasProps) {
   return (
     <div
       style={{
-        overflow: "hidden",
         width: canvasWidth,
-        position: "relative",
         height: canvasHeight,
       }}
       className="canvasWrapper"
