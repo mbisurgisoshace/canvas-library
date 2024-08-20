@@ -1,12 +1,13 @@
 /**
  * Canvas types
  */
-export type FullSizeCanvas = { canvasSize: "full" };
+export type Base = "web-div" | "web-canvas";
 export type CustomSizeCanvas = {
   canvasSize: "custom";
   width: string;
   height: string;
 };
+export type FullSizeCanvas = { canvasSize: "full" };
 
 /**
  * Canvas Object types

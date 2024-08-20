@@ -10,11 +10,11 @@ export default function Draggable({ canvasObject }: DraggableProps) {
     <div
       className="draggable"
       style={{
-        position: "absolute",
-        top: y,
-        left: x,
         width,
         height,
+        top: y,
+        left: x,
+        position: "absolute",
         border: "1px solid black",
       }}
     ></div>

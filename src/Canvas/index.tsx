@@ -6,9 +6,10 @@ import "./styles.css";
 
 import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
-import { CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
+import { Base, CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
 
 interface CanvasDefaultProps {
+  base?: Base;
   maxZoom?: number;
   minZoom?: number;
   zoomStep?: number;
@@ -25,6 +26,7 @@ export default function Canvas(props: CanvasProps) {
   const {
     minZoom = 1,
     maxZoom = 10,
+    base = "web-div",
     enableZoom = true,
     zoomControls = false,
   } = props;
