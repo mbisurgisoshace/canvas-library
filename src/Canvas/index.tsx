@@ -5,8 +5,8 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import "./styles.css";
 
 import Draggable from "./Draggable";
-import { CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
 import ZoomControl from "./Tools/ZoomControl";
+import { CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
 
 interface CanvasDefaultProps {
   maxZoom?: number;
@@ -54,9 +54,6 @@ export default function Canvas(props: CanvasProps) {
   }, [enableZoom, zoomBehavior, updateTransform]);
 
   const onZoomIn = () => {
-    const wrapper = select(".canvasWrapper");
-    console.log(wrapper);
-
     select<HTMLDivElement, unknown>(".canvasWrapper").call(
       zoomBehavior.scaleBy,
       2
@@ -86,8 +83,6 @@ export default function Canvas(props: CanvasProps) {
         style={{
           width: canvasWidth,
           height: canvasHeight,
-          //   position: "relative",
-          //   transformOrigin: "top left",
           transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
         }}
       >
