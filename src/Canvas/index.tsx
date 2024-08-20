@@ -1,7 +1,8 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
-import { MinusIcon, PlusIcon } from "lucide-react";
 import { useEffect, useMemo, useState, useCallback } from "react";
+
+import "./styles.css";
 
 import Draggable from "./Draggable";
 import { CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
@@ -85,8 +86,8 @@ export default function Canvas(props: CanvasProps) {
         style={{
           width: canvasWidth,
           height: canvasHeight,
-          position: "relative",
-          transformOrigin: "top left",
+          //   position: "relative",
+          //   transformOrigin: "top left",
           transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
         }}
       >

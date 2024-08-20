@@ -2,3 +2,8 @@
     overflow: hidden;
     position: relative;
 }
+
+.zoomablePannableArea {
+    position: relative;
+    transform-origin: top left;
+}
