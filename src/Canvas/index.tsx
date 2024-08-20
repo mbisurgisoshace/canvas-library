@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 
 import Draggable from "./Draggable";
 import { CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
+import ZoomControl from "./Tools/ZoomControl";
 
 interface CanvasDefaultProps {
   maxZoom?: number;
@@ -23,7 +24,6 @@ export default function Canvas(props: CanvasProps) {
   const {
     minZoom = 1,
     maxZoom = 10,
-    zoomStep = 1,
     enableZoom = true,
     zoomControls = false,
   } = props;
@@ -34,7 +34,7 @@ export default function Canvas(props: CanvasProps) {
   const canvasHeight = props.canvasSize === "full" ? "100%" : props.height;
 
   const zoomBehavior = useMemo(
-    () => zoom().scaleExtent([minZoom, maxZoom]),
+    () => zoom<HTMLDivElement, unknown>().scaleExtent([minZoom, maxZoom]),
     [minZoom, maxZoom]
   );
 
@@ -48,61 +48,39 @@ export default function Canvas(props: CanvasProps) {
   useEffect(() => {
     if (enableZoom) {
       zoomBehavior.on("zoom", updateTransform);
-      select(".canvasWrapper").call(zoomBehavior);
+      select<HTMLDivElement, unknown>(".canvasWrapper").call(zoomBehavior);
     }
   }, [enableZoom, zoomBehavior, updateTransform]);
 
+  const onZoomIn = () => {
+    const wrapper = select(".canvasWrapper");
+    console.log(wrapper);
+
+    select<HTMLDivElement, unknown>(".canvasWrapper").call(
+      zoomBehavior.scaleBy,
+      2
+    );
+  };
+
+  const onZoomOut = () => {
+    select<HTMLDivElement, unknown>(".canvasWrapper").call(
+      zoomBehavior.scaleBy,
+      0.5
+    );
+  };
+
   return (
     <div
-      className="canvasWrapper"
       style={{
-        width: canvasWidth,
-        height: canvasHeight,
         overflow: "hidden",
+        width: canvasWidth,
         position: "relative",
+        height: canvasHeight,
       }}
+      className="canvasWrapper"
     >
-      {zoomControls && (
-        <div
-          style={{
-            gap: 5,
-            top: 10,
-            left: 10,
-            display: "flex",
-            position: "absolute",
-            flexDirection: "row",
-          }}
-        >
-          <div
-            style={{
-              width: 20,
-              height: 20,
-              display: "flex",
-              borderRadius: 3,
-              cursor: "pointer",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid black",
-            }}
-          >
-            <PlusIcon size={20} />
-          </div>
-
-          <div
-            style={{
-              width: 20,
-              height: 20,
-              display: "flex",
-              borderRadius: 3,
-              cursor: "pointer",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid black",
-            }}
-          >
-            <MinusIcon size={20} />
-          </div>
-        </div>
+      {enableZoom && zoomControls && (
+        <ZoomControl onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
       )}
       <div
         className="zoomablePannableArea"
@@ -110,6 +88,7 @@ export default function Canvas(props: CanvasProps) {
           width: canvasWidth,
           height: canvasHeight,
           position: "relative",
+          transformOrigin: "top left",
           transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
         }}
       >

@@ -1,6 +1,5 @@
 import "./App.css";
 import Canvas from "./Canvas";
-import SvgCanvas from "./Canvas/SvgCanvas";
 import { CanvasObject } from "./Canvas/types";
 
 function App() {
@@ -12,8 +11,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Canvas canvasSize="full" elements={elements} zoomControls />
-      {/* <SvgCanvas canvasSize="full" elements={elements} /> */}
+      <Canvas canvasSize="full" elements={elements} />
     </div>
   );
 }
