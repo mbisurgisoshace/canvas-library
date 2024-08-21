@@ -4,15 +4,21 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 
 import "./styles.css";
 
+import {
+  Base,
+  Tool,
+  CanvasObject,
+  FullSizeCanvas,
+  CustomSizeCanvas,
+} from "./types";
 import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
-import { Base, CanvasObject, CustomSizeCanvas, FullSizeCanvas } from "./types";
 
 interface CanvasDefaultProps {
   base?: Base;
+  tools?: Tool[];
   maxZoom?: number;
   minZoom?: number;
-  zoomStep?: number;
   enableZoom?: boolean;
   zoomControls?: boolean;
   elements: CanvasObject[];
@@ -24,6 +30,7 @@ type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
 
 export default function Canvas(props: CanvasProps) {
   const {
+    tools = [],
     minZoom = 1,
     maxZoom = 10,
     base = "web-div",
@@ -68,6 +75,12 @@ export default function Canvas(props: CanvasProps) {
       0.5
     );
   };
+
+  /**
+   * Rendering will changed based on the base prop.
+   *    - web-div: Render the canvas using a div element
+   *    - web-canvas: Render the canvas using the canvas element and the canvas API
+   */
 
   return (
     <div
