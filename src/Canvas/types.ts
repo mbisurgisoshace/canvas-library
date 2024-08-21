@@ -13,9 +13,15 @@ export type FullSizeCanvas = { canvasSize: "full" };
  * Canvas Object types
  */
 export interface CanvasObject {
-  id: string;
   x: number;
   y: number;
+  id: string;
   width: number;
   height: number;
+  children: CanvasObject[];
 }
+
+/**
+ * Tools types
+ */
+export type Tool = "ui-base-component-library" | "ui-custom-component-library";
