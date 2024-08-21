@@ -1,50 +1,13 @@
-# React + TypeScript + Vite
+# Canvas Library
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This library will be responsible of wrapping a set of features that are useful for developing an app with features similar to Miro, Figma, DrawIO, etc.
 
-Currently, two official plugins are available:
+The library will be split into sub modules, each responsible to solve a set of features. These modules and sub modules are:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Canvas Library Core
+- Dragging & Resizing
+- UI Base Components
 
-## Expanding the ESLint configuration
+## Canvas Library CORE
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+This is the core of the library. It will be responsible for rendering a canvas, which could be implemented on different ways, and providing all basic features a canvas should provide, like zooming, panning and rendering elements within it. When using it also, it is required to define what internal implementation of the canvas it should be use (with divs, with Canvas API, etc).

@@ -15,7 +15,7 @@ import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
 
 interface CanvasDefaultProps {
-  base?: Base;
+  base: Base;
   tools?: Tool[];
   maxZoom?: number;
   minZoom?: number;

@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className="wrapper">
-      <Canvas canvasSize="full" elements={elements} />
+      <Canvas base="web-div" canvasSize="full" elements={elements} />
     </div>
   );
 }
