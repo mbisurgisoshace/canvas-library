@@ -1,6 +1,7 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { DndContext } from "@dnd-kit/core";
+import { useEffect, useMemo, useState, useCallback, act } from "react";
 
 import "./styles.css";
 
@@ -13,6 +14,7 @@ import {
 } from "./types";
 import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
+import Droppable from "./Droppable";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -38,6 +40,8 @@ export default function Canvas(props: CanvasProps) {
     zoomControls = false,
   } = props;
 
+  const [activeElement, setActiveElement] = useState<string | null>(null);
+  const [elements, setElements] = useState<CanvasObject[]>(props.elements);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
   const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
@@ -83,28 +87,56 @@ export default function Canvas(props: CanvasProps) {
    */
 
   return (
-    <div
-      style={{
-        width: canvasWidth,
-        height: canvasHeight,
+    <DndContext
+      onDragEnd={(event) => {
+        const id = event.active.id;
+        const element = elements.find((element) => element.id === id);
+        if (element) {
+          element.x += event.delta.x;
+          element.y += event.delta.y;
+          setElements([...elements]);
+        }
       }}
-      className="canvasWrapper"
     >
-      {enableZoom && zoomControls && (
-        <ZoomControl onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
-      )}
-      <div
-        className="zoomablePannableArea"
+      <Droppable
+        id="canvas"
         style={{
           width: canvasWidth,
           height: canvasHeight,
-          transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
         }}
       >
-        {props.elements.map((element) => (
-          <Draggable key={element.id} canvasObject={element} />
-        ))}
-      </div>
-    </div>
+        <div
+          style={{
+            width: canvasWidth,
+            height: canvasHeight,
+          }}
+          className="canvasWrapper"
+          onClick={() => {
+            setActiveElement(null);
+          }}
+        >
+          {enableZoom && zoomControls && (
+            <ZoomControl onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
+          )}
+          <div
+            className="zoomablePannableArea"
+            style={{
+              width: canvasWidth,
+              height: canvasHeight,
+              transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
+            }}
+          >
+            {elements.map((element) => (
+              <Draggable
+                key={element.id}
+                canvasObject={element}
+                activeElement={activeElement}
+                setActiveElement={setActiveElement}
+              />
+            ))}
+          </div>
+        </div>
+      </Droppable>
+    </DndContext>
   );
 }
