@@ -1,7 +1,7 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
-import { DndContext } from "@dnd-kit/core";
-import { useEffect, useMemo, useState, useCallback, act } from "react";
+import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { useEffect, useMemo, useState, useCallback } from "react";
 
 import "./styles.css";
 
@@ -64,7 +64,7 @@ export default function Canvas(props: CanvasProps) {
       zoomBehavior.on("zoom", updateTransform);
       select<HTMLDivElement, unknown>(".canvasWrapper").call(zoomBehavior);
     }
-  }, [enableZoom, zoomBehavior, updateTransform]);
+  }, [enableZoom, zoomBehavior, updateTransform, isResizing]);
 
   const onZoomIn = () => {
     select<HTMLDivElement, unknown>(".canvasWrapper").call(
@@ -86,18 +86,27 @@ export default function Canvas(props: CanvasProps) {
    *    - web-canvas: Render the canvas using the canvas element and the canvas API
    */
 
+  const onDragEnd = useCallback(
+    (event: DragEndEvent) => {
+      const id = event.active.id;
+      const element = elements.find((element) => element.id === id);
+      if (element) {
+        element.x += event.delta.x;
+        element.y += event.delta.y;
+        setElements([...elements]);
+      }
+    },
+    [elements]
+  );
+
+  /**
+   * Rendering will changed based on the base prop.
+   *    - web-div: Render the canvas using a div element
+   *    - web-canvas: Render the canvas using the canvas element and the canvas API
+   */
+
   return (
-    <DndContext
-      onDragEnd={(event) => {
-        const id = event.active.id;
-        const element = elements.find((element) => element.id === id);
-        if (element) {
-          element.x += event.delta.x;
-          element.y += event.delta.y;
-          setElements([...elements]);
-        }
-      }}
-    >
+    <DndContext onDragEnd={onDragEnd}>
       <Droppable
         id="canvas"
         style={{
