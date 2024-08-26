@@ -64,7 +64,7 @@ export default function Canvas(props: CanvasProps) {
       zoomBehavior.on("zoom", updateTransform);
       select<HTMLDivElement, unknown>(".canvasWrapper").call(zoomBehavior);
     }
-  }, [enableZoom, zoomBehavior, updateTransform, isResizing]);
+  }, [enableZoom, zoomBehavior, updateTransform]);
 
   const onZoomIn = () => {
     select<HTMLDivElement, unknown>(".canvasWrapper").call(
