@@ -46,10 +46,16 @@ export default function Canvas(props: CanvasProps) {
 	const [draggedElement, setDraggedElement] = useState<CanvasObject | null>(
 		null
 	);
+	const [resizingElement, setResizingElement] = useState<CanvasObject | null>(
+		null
+	);
 	const [initialPointerPosition, setInitialPointerPosition] = useState<{
 		x: number;
 		y: number;
 	} | null>(null);
+	const [resizeDirection, setResizeDirection] = useState<
+		"right" | "bottom" | "corner" | null
+	>(null);
 
 	const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
 	const canvasHeight = props.canvasSize === "full" ? "100%" : props.height;
@@ -84,12 +90,48 @@ export default function Canvas(props: CanvasProps) {
 					ctx.fillStyle = "lightgrey";
 					ctx.fillRect(element.x, element.y, element.width, element.height);
 					ctx.strokeRect(element.x, element.y, element.width, element.height);
+
+					// Draw resize handles
+					drawResizeHandles(ctx, element);
 				});
 
 				ctx.restore();
 			}
 		}
 	}, [elements, transform, base]);
+
+	// Draw resize handles on each element
+	const drawResizeHandles = (
+		ctx: CanvasRenderingContext2D,
+		element: CanvasObject
+	) => {
+		ctx.fillStyle = "blue";
+		const handleSize = 8;
+
+		// Right handle
+		ctx.fillRect(
+			element.x + element.width - handleSize / 2,
+			element.y + element.height / 2 - handleSize / 2,
+			handleSize,
+			handleSize
+		);
+
+		// Bottom handle
+		ctx.fillRect(
+			element.x + element.width / 2 - handleSize / 2,
+			element.y + element.height - handleSize / 2,
+			handleSize,
+			handleSize
+		);
+
+		// Corner handle (bottom-right)
+		ctx.fillRect(
+			element.x + element.width - handleSize / 2,
+			element.y + element.height - handleSize / 2,
+			handleSize,
+			handleSize
+		);
+	};
 
 	useEffect(() => {
 		if (enableZoom) {
@@ -119,35 +161,80 @@ export default function Canvas(props: CanvasProps) {
 		const x = (e.clientX - rect.left - transform.x) / transform.k;
 		const y = (e.clientY - rect.top - transform.y) / transform.k;
 
-		const clickedElement = elements.find(
+		// Check if clicked on resize handles
+		const element = elements.find(
 			(el) =>
 				x >= el.x && x <= el.x + el.width && y >= el.y && y <= el.y + el.height
 		);
 
-		if (clickedElement) {
-			setDraggedElement(clickedElement);
-			setInitialPointerPosition({ x: e.clientX, y: e.clientY });
-			setActiveElement(clickedElement.id);
+		if (element) {
+			const handleSize = 8;
+
+			// Detect which handle was clicked
+			const clickedRightHandle =
+				x >= element.x + element.width - handleSize / 2 &&
+				y >= element.y + element.height / 2 - handleSize / 2 &&
+				y <= element.y + element.height / 2 + handleSize / 2;
+			const clickedBottomHandle =
+				y >= element.y + element.height - handleSize / 2 &&
+				x >= element.x + element.width / 2 - handleSize / 2 &&
+				x <= element.x + element.width / 2 + handleSize / 2;
+			const clickedCornerHandle =
+				x >= element.x + element.width - handleSize / 2 &&
+				y >= element.y + element.height - handleSize / 2;
+
+			if (clickedRightHandle || clickedBottomHandle || clickedCornerHandle) {
+				setResizingElement(element);
+				setResizeDirection(
+					clickedCornerHandle
+						? "corner"
+						: clickedRightHandle
+						? "right"
+						: "bottom"
+				);
+				setInitialPointerPosition({ x: e.clientX, y: e.clientY });
+			} else {
+				// If not resizing, treat as dragging
+				setDraggedElement(element);
+				setInitialPointerPosition({ x: e.clientX, y: e.clientY });
+				setActiveElement(element.id);
+			}
 		}
 	};
 
 	const onPointerMove = (e: React.PointerEvent<HTMLCanvasElement>) => {
-		if (!draggedElement || !initialPointerPosition || !canvasRef.current)
-			return;
+		if (resizingElement && initialPointerPosition && resizeDirection) {
+			// Handle resizing logic
+			const dx = (e.clientX - initialPointerPosition.x) / transform.k;
+			const dy = (e.clientY - initialPointerPosition.y) / transform.k;
 
-		const dx = (e.clientX - initialPointerPosition.x) / transform.k;
-		const dy = (e.clientY - initialPointerPosition.y) / transform.k;
+			if (resizeDirection === "right" || resizeDirection === "corner") {
+				resizingElement.width += dx;
+			}
+			if (resizeDirection === "bottom" || resizeDirection === "corner") {
+				resizingElement.height += dy;
+			}
 
-		draggedElement.x += dx;
-		draggedElement.y += dy;
+			setInitialPointerPosition({ x: e.clientX, y: e.clientY });
+			setElements([...elements]);
+		} else if (draggedElement && initialPointerPosition) {
+			// Handle dragging logic
+			const dx = (e.clientX - initialPointerPosition.x) / transform.k;
+			const dy = (e.clientY - initialPointerPosition.y) / transform.k;
 
-		setInitialPointerPosition({ x: e.clientX, y: e.clientY });
-		setElements([...elements]);
+			draggedElement.x += dx;
+			draggedElement.y += dy;
+
+			setInitialPointerPosition({ x: e.clientX, y: e.clientY });
+			setElements([...elements]);
+		}
 	};
 
 	const onPointerUp = () => {
 		setDraggedElement(null);
+		setResizingElement(null);
 		setInitialPointerPosition(null);
+		setResizeDirection(null);
 	};
 
 	const onDragEnd = useCallback(
