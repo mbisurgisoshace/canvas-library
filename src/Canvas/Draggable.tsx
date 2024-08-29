@@ -1,3 +1,4 @@
+import { Resizable } from "re-resizable";
 import { useDraggable } from "@dnd-kit/core";
 
 import { CanvasObject } from "./types";
@@ -6,9 +7,11 @@ interface DraggableProps {
   canvasObject: CanvasObject;
   activeElement: string | null;
   setActiveElement: (id: string) => void;
+  onResize: (dx: number, dy: number, resizing: boolean) => void;
 }
 
 export default function Draggable({
+  onResize,
   canvasObject,
   activeElement,
   setActiveElement,
@@ -30,7 +33,6 @@ export default function Draggable({
         height,
         top: y,
         left: x,
-        zIndex: 10,
         position: "absolute",
         backgroundColor: "white",
         border: `1px solid ${activeElement === id ? "#0984e3" : "black"}`,
@@ -41,12 +43,39 @@ export default function Draggable({
       onPointerDown={(e) => {
         setActiveElement(id);
 
+        const isResizeHandle = (
+          e.target as HTMLDivElement
+        ).offsetParent?.className.includes("resizable");
+
+        if (isResizeHandle) {
+          return;
+        }
+
         if (listeners && listeners.onPointerDown) {
           listeners.onPointerDown(e);
           e.preventDefault();
           e.stopPropagation();
         }
       }}
-    ></div>
+    >
+      <Resizable
+        className="resizable"
+        size={{ width, height }}
+        onResize={(e, direction, ref, delta) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onResize(delta.width, delta.height, true);
+        }}
+        onResizeStart={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+        }}
+        onResizeStop={(e, direction, ref, delta) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onResize(delta.width, delta.height, false);
+        }}
+      ></Resizable>
+    </div>
   );
 }

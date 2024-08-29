@@ -15,6 +15,7 @@ import {
 import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
 import Droppable from "./Droppable";
+import { Resizable } from "re-resizable";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -26,7 +27,7 @@ interface CanvasDefaultProps {
   elements: CanvasObject[];
 }
 
-type ZoomEvent = { transform: Transform };
+type ZoomEvent = { transform: Transform; sourceEvent: React.MouseEvent };
 type Transform = { x: number; y: number; k: number };
 type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
 
@@ -43,6 +44,7 @@ export default function Canvas(props: CanvasProps) {
   const [activeElement, setActiveElement] = useState<string | null>(null);
   const [elements, setElements] = useState<CanvasObject[]>(props.elements);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
+  const [currentResizeDelta, setCurrentResizeDelta] = useState({ x: 0, y: 0 });
 
   const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
   const canvasHeight = props.canvasSize === "full" ? "100%" : props.height;
@@ -61,7 +63,15 @@ export default function Canvas(props: CanvasProps) {
 
   useEffect(() => {
     if (enableZoom) {
-      zoomBehavior.on("zoom", updateTransform);
+      zoomBehavior
+        .filter((e) => {
+          const isResizeHandle = (
+            e.target as HTMLDivElement
+          ).offsetParent?.className.includes("resizable");
+
+          return !isResizeHandle;
+        })
+        .on("zoom", updateTransform);
       select<HTMLDivElement, unknown>(".canvasWrapper").call(zoomBehavior);
     }
   }, [enableZoom, zoomBehavior, updateTransform]);
@@ -97,6 +107,28 @@ export default function Canvas(props: CanvasProps) {
       }
     },
     [elements]
+  );
+
+  const onResize = useCallback(
+    (deltaX: number, deltaY: number, resizing: boolean) => {
+      const id = activeElement;
+
+      if (!resizing) {
+        setCurrentResizeDelta({ x: 0, y: 0 });
+        return;
+      }
+
+      if (!id) return;
+      const element = elements.find((element) => element.id === id);
+
+      if (element) {
+        element.width += deltaX - currentResizeDelta.x;
+        element.height += deltaY - currentResizeDelta.y;
+        setElements([...elements]);
+        setCurrentResizeDelta({ x: deltaX, y: deltaY });
+      }
+    },
+    [elements, activeElement, currentResizeDelta]
   );
 
   /**
@@ -138,10 +170,22 @@ export default function Canvas(props: CanvasProps) {
             {elements.map((element) => (
               <Draggable
                 key={element.id}
+                onResize={onResize}
                 canvasObject={element}
                 activeElement={activeElement}
                 setActiveElement={setActiveElement}
               />
+              // <Resizable
+              //   key={element.id}
+              //   size={{ width: element.width, height: element.height }}
+              //   style={{
+              //     position: "absolute",
+              //     top: element.y,
+              //     left: element.x,
+              //     border: "1px solid black",
+              //   }}
+              //   onResizeStart={() => console.log("onResizeStart")}
+              // />
             ))}
           </div>
         </div>
