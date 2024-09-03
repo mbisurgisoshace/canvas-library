@@ -2,21 +2,16 @@ import { Resizable } from "re-resizable";
 import { useDraggable } from "@dnd-kit/core";
 
 import { CanvasObject } from "./types";
+import { useCanvas } from "./Features/CanvasContext";
 
 interface DraggableProps {
   canvasObject: CanvasObject;
-  activeElement: string | null;
-  setActiveElement: (id: string) => void;
   onResize: (dx: number, dy: number, resizing: boolean) => void;
 }
 
-export default function Draggable({
-  onResize,
-  canvasObject,
-  activeElement,
-  setActiveElement,
-}: DraggableProps) {
+export default function Draggable({ onResize, canvasObject }: DraggableProps) {
   const { id, x, y, width, height } = canvasObject;
+  const { selectElement, selectedElement } = useCanvas();
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
@@ -35,13 +30,13 @@ export default function Draggable({
         left: x,
         position: "absolute",
         backgroundColor: "white",
-        border: `1px solid ${activeElement === id ? "#0984e3" : "black"}`,
+        border: `1px solid ${selectedElement === id ? "#0984e3" : "black"}`,
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
           : undefined,
       }}
       onPointerDown={(e) => {
-        setActiveElement(id);
+        selectElement(id);
 
         const isResizeHandle = (
           e.target as HTMLDivElement

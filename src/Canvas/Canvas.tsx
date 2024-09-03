@@ -175,8 +175,6 @@ export default function CanvasModule(props: CanvasProps) {
                 key={element.id}
                 onResize={onResize}
                 canvasObject={element}
-                activeElement={selectedElement}
-                setActiveElement={selectElement}
               />
             ))}
           </div>
