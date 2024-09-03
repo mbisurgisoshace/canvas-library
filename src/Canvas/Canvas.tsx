@@ -15,7 +15,6 @@ import {
 import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
 import Droppable from "./Droppable";
-import { Resizable } from "re-resizable";
 import { useCanvas } from "./Features/CanvasContext";
 
 interface CanvasDefaultProps {
@@ -42,12 +41,9 @@ export default function CanvasModule(props: CanvasProps) {
     zoomControls = false,
   } = props;
 
-  const { selectElement, unselectElement, selectedElement } = useCanvas();
+  const { elements, onDragEnd, unselectElement } = useCanvas();
 
-  //const [activeElement, setActiveElement] = useState<string | null>(null);
-  const [elements, setElements] = useState<CanvasObject[]>(props.elements);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
-  const [currentResizeDelta, setCurrentResizeDelta] = useState({ x: 0, y: 0 });
 
   const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
   const canvasHeight = props.canvasSize === "full" ? "100%" : props.height;
@@ -99,47 +95,6 @@ export default function CanvasModule(props: CanvasProps) {
    *    - web-canvas: Render the canvas using the canvas element and the canvas API
    */
 
-  const onDragEnd = useCallback(
-    (event: DragEndEvent) => {
-      const id = event.active.id;
-      const element = elements.find((element) => element.id === id);
-      if (element) {
-        element.x += event.delta.x;
-        element.y += event.delta.y;
-        setElements([...elements]);
-      }
-    },
-    [elements]
-  );
-
-  const onResize = useCallback(
-    (deltaX: number, deltaY: number, resizing: boolean) => {
-      const id = selectedElement;
-
-      if (!resizing) {
-        setCurrentResizeDelta({ x: 0, y: 0 });
-        return;
-      }
-
-      if (!id) return;
-      const element = elements.find((element) => element.id === id);
-
-      if (element) {
-        element.width += deltaX - currentResizeDelta.x;
-        element.height += deltaY - currentResizeDelta.y;
-        setElements([...elements]);
-        setCurrentResizeDelta({ x: deltaX, y: deltaY });
-      }
-    },
-    [elements, selectedElement, currentResizeDelta]
-  );
-
-  /**
-   * Rendering will changed based on the base prop.
-   *    - web-div: Render the canvas using a div element
-   *    - web-canvas: Render the canvas using the canvas element and the canvas API
-   */
-
   return (
     <DndContext onDragEnd={onDragEnd}>
       <Droppable
@@ -171,11 +126,7 @@ export default function CanvasModule(props: CanvasProps) {
             }}
           >
             {elements.map((element) => (
-              <Draggable
-                key={element.id}
-                onResize={onResize}
-                canvasObject={element}
-              />
+              <Draggable key={element.id} canvasObject={element} />
             ))}
           </div>
         </div>

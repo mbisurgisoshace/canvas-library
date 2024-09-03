@@ -22,7 +22,7 @@ type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
 
 export default function Canvas(props: CanvasProps) {
   return (
-    <CanvasProvider>
+    <CanvasProvider elements={props.elements}>
       <CanvasModule {...props} />
     </CanvasProvider>
   );

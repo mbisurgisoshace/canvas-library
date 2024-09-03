@@ -6,12 +6,17 @@ import { useCanvas } from "./Features/CanvasContext";
 
 interface DraggableProps {
   canvasObject: CanvasObject;
-  onResize: (dx: number, dy: number, resizing: boolean) => void;
 }
 
-export default function Draggable({ onResize, canvasObject }: DraggableProps) {
+export default function Draggable({ canvasObject }: DraggableProps) {
   const { id, x, y, width, height } = canvasObject;
-  const { selectElement, selectedElement } = useCanvas();
+  const {
+    selectElement,
+    selectedElement,
+    onResizing,
+    onResizeStop,
+    onResizeStart,
+  } = useCanvas();
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id,
@@ -55,21 +60,10 @@ export default function Draggable({ onResize, canvasObject }: DraggableProps) {
     >
       <Resizable
         className="resizable"
+        onResize={onResizing}
         size={{ width, height }}
-        onResize={(e, direction, ref, delta) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onResize(delta.width, delta.height, true);
-        }}
-        onResizeStart={(e) => {
-          e.stopPropagation();
-          e.preventDefault();
-        }}
-        onResizeStop={(e, direction, ref, delta) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onResize(delta.width, delta.height, false);
-        }}
+        onResizeStop={onResizeStop}
+        onResizeStart={onResizeStart}
       ></Resizable>
     </div>
   );
