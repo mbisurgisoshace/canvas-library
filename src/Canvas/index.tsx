@@ -175,17 +175,6 @@ export default function Canvas(props: CanvasProps) {
                 activeElement={activeElement}
                 setActiveElement={setActiveElement}
               />
-              // <Resizable
-              //   key={element.id}
-              //   size={{ width: element.width, height: element.height }}
-              //   style={{
-              //     position: "absolute",
-              //     top: element.y,
-              //     left: element.x,
-              //     border: "1px solid black",
-              //   }}
-              //   onResizeStart={() => console.log("onResizeStart")}
-              // />
             ))}
           </div>
         </div>
