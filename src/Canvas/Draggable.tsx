@@ -1,6 +1,6 @@
 import { Resizable } from "re-resizable";
 import { useDraggable } from "@dnd-kit/core";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CanvasObject } from "./types";
 
 interface DraggableProps {
@@ -24,9 +24,55 @@ export default function Draggable({
 		id,
 	});
 
+	const [isResizing, setIsResizing] = useState(false);
+	const [rectSize, setRectSize] = useState({ width, height });
+
 	// Apply transform to current position if dragging
 	const draggedX = transform ? x + transform.x : x;
 	const draggedY = transform ? y + transform.y : y;
+
+	// Mouse down on the resizing handle
+	const handleResizeStart = (e: React.MouseEvent) => {
+		console.log("here");
+		e.preventDefault();
+		e.stopPropagation();
+		setIsResizing(true);
+	};
+
+	// Mouse move during resizing
+	const handleResizeMove = (e: MouseEvent) => {
+		if (isResizing) {
+			const newWidth = e.clientX - draggedX;
+			const newHeight = e.clientY - draggedY;
+			setRectSize({ width: newWidth, height: newHeight });
+			onResize(id, newWidth, newHeight);
+		}
+	};
+
+	// Mouse up when resizing stops
+	const handleResizeEnd = () => {
+		console.log("hi");
+
+		setIsResizing(false);
+	};
+
+	useEffect(() => {
+		if (isResizing) {
+			// Attach event listeners for mousemove and mouseup
+			window.addEventListener("mousemove", handleResizeMove);
+			window.addEventListener("mouseup", handleResizeEnd);
+		} else {
+			// Remove event listeners when resizing ends
+			window.removeEventListener("mousemove", handleResizeMove);
+			window.removeEventListener("mouseup", handleResizeEnd);
+		}
+
+		// Cleanup function to remove listeners on component unmount
+		return () => {
+			window.removeEventListener("mousemove", handleResizeMove);
+			window.removeEventListener("mouseup", handleResizeEnd);
+		};
+	}, [isResizing]);
 
 	if (base === "web-canvas") {
 		return (
@@ -46,11 +92,22 @@ export default function Draggable({
 				<rect
 					x={draggedX}
 					y={draggedY}
-					width={width}
-					height={height}
+					width={rectSize.width}
+					height={rectSize.height}
 					fill="lightgrey"
 					stroke={activeElement === id ? "#0984e3" : "black"}
 					strokeWidth={activeElement === id ? 3 : 1}
+				/>
+
+				{/* Resize handle */}
+				<circle
+					cx={draggedX + rectSize.width}
+					cy={draggedY + rectSize.height}
+					r={5}
+					fill="red"
+					onPointerDown={handleResizeStart}
+					onPointerUp={handleResizeEnd}
+					style={{ cursor: "nwse-resize" }}
 				/>
 			</g>
 		);
