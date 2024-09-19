@@ -16,6 +16,7 @@ import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
 import Droppable from "./Droppable";
 import { useCanvas } from "./Features/CanvasContext";
+import { restrictToParentElement } from "@dnd-kit/modifiers";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -41,6 +42,7 @@ export default function CanvasModule(props: CanvasProps) {
     zoomControls = false,
   } = props;
 
+  const [active, setActive] = useState<any>(null);
   const { elements, onDragEnd, unselectElement } = useCanvas();
 
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
@@ -94,9 +96,20 @@ export default function CanvasModule(props: CanvasProps) {
    *    - web-div: Render the canvas using a div element
    *    - web-canvas: Render the canvas using the canvas element and the canvas API
    */
-
   return (
-    <DndContext onDragEnd={onDragEnd}>
+    <DndContext
+      onDragEnd={(e) => {
+        setActive(null);
+        onDragEnd(e);
+      }}
+      onDragStart={(data) => {
+        const { active } = data;
+        setActive(active);
+      }}
+      modifiers={
+        active && active.data.current ? active.data.current.modifiers : []
+      }
+    >
       <Droppable
         id="canvas"
         style={{

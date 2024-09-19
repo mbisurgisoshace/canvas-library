@@ -3,7 +3,7 @@ import { useContext, createContext, useState, useCallback } from "react";
 
 import { CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
-import { DragEndEvent } from "@dnd-kit/core";
+import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 
 type CanvasContextType = {
   elements: CanvasObject[];
@@ -73,17 +73,88 @@ export default function CanvasProvider(props: {
     [elements, selectedElement, currentResizeDelta]
   );
 
+  const groupElement = useCallback(
+    (
+      droppedElementId: UniqueIdentifier,
+      droppableElementId: UniqueIdentifier
+    ) => {
+      const droppableElement = elements.find(
+        (element) => element.id === droppableElementId
+      )!;
+      const droppedElementIdx = elements.findIndex(
+        (element) => element.id === droppedElementId
+      );
+      const element = elements.find(
+        (element) => element.id === droppedElementId
+      )!;
+      elements.splice(droppedElementIdx, 1);
+      droppableElement.children.push({
+        ...element,
+        parentId: droppableElement.id,
+      });
+      setElements([...elements]);
+    },
+    [elements]
+  );
+
+  const dragWithinParent = useCallback(
+    (
+      draggableElementId: UniqueIdentifier,
+      parentId: string,
+      x: number,
+      y: number
+    ) => {
+      const parentElement = elements.find(
+        (element) => element.id === parentId
+      )!;
+
+      parentElement.children = parentElement.children.map((child) =>
+        child.id === draggableElementId
+          ? {
+              ...child,
+              x: child.x + x,
+              y: child.y + y,
+            }
+          : child
+      );
+      setElements([...elements]);
+    },
+    [elements]
+  );
+
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
+      const overId = event.over?.id;
+      const parentId = event.active.data?.current?.parentId;
+      console.log("id", id);
+
       const element = elements.find((element) => element.id === id);
+      console.log(element);
+
+      const isDropping = overId && overId !== id && overId !== "canvas";
+
+      //if (!element) return;
+
+      // Element being dropped inside another.
+      if (isDropping && element) {
+        groupElement(id, overId);
+        return;
+      }
+
+      // Element being dragged within a parent.
+      if (parentId) {
+        dragWithinParent(id, parentId, event.delta.x, event.delta.y);
+        return;
+      }
+
       if (element) {
         element.x += event.delta.x;
         element.y += event.delta.y;
         setElements([...elements]);
       }
     },
-    [elements]
+    [elements, groupElement, dragWithinParent]
   );
 
   const onResizing = (

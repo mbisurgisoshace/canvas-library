@@ -18,6 +18,7 @@ export interface CanvasObject {
   id: string;
   width: number;
   height: number;
+  parentId?: string;
   children: CanvasObject[];
 }
 
