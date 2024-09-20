@@ -39,6 +39,7 @@ export default function Draggable({ canvasObject }: DraggableProps) {
 
   return (
     <div
+      id={id}
       {...listeners}
       {...attributes}
       //ref={setNodeRef}

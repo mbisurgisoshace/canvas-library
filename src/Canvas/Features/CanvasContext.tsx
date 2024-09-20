@@ -76,7 +76,8 @@ export default function CanvasProvider(props: {
   const groupElement = useCallback(
     (
       droppedElementId: UniqueIdentifier,
-      droppableElementId: UniqueIdentifier
+      droppableElementId: UniqueIdentifier,
+      event: DragEndEvent
     ) => {
       const droppableElement = elements.find(
         (element) => element.id === droppableElementId
@@ -88,8 +89,31 @@ export default function CanvasProvider(props: {
         (element) => element.id === droppedElementId
       )!;
       elements.splice(droppedElementIdx, 1);
+
+      const clientX = event.activatorEvent.clientX;
+      const clientY = event.activatorEvent.clientY;
+
+      const htmlDoppableElement = document.getElementById(
+        droppableElementId.toString()
+      )!;
+
+      const localY = clientY - element.y;
+      const localX = clientX - element.x;
+
+      console.log(
+        "htmlDoppableElement",
+        htmlDoppableElement.getBoundingClientRect()
+      );
+
+      console.log("clientX", clientX);
+      console.log("clientY", clientY);
+      console.log("localX", localX);
+      console.log("localY", localY);
+
       droppableElement.children.push({
         ...element,
+        x: localX,
+        y: localY,
         parentId: droppableElement.id,
       });
       setElements([...elements]);
@@ -127,7 +151,6 @@ export default function CanvasProvider(props: {
       const id = event.active.id;
       const overId = event.over?.id;
       const parentId = event.active.data?.current?.parentId;
-      console.log("id", id);
 
       const element = elements.find((element) => element.id === id);
       console.log(element);
@@ -138,10 +161,10 @@ export default function CanvasProvider(props: {
 
       // Element being dropped inside another.
       if (isDropping && element) {
-        groupElement(id, overId);
+        console.log("event", event);
+        groupElement(id, overId, event);
         return;
       }
-
       // Element being dragged within a parent.
       if (parentId) {
         dragWithinParent(id, parentId, event.delta.x, event.delta.y);
