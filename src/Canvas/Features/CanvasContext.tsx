@@ -90,20 +90,24 @@ export default function CanvasProvider(props: {
       )!;
       elements.splice(droppedElementIdx, 1);
 
-      const clientX = event.activatorEvent.clientX;
-      const clientY = event.activatorEvent.clientY;
+      const clientX = event.activatorEvent.clientX + event.delta.x;
+      const clientY = event.activatorEvent.clientY + event.delta.y;
 
       const htmlDoppableElement = document.getElementById(
         droppableElementId.toString()
       )!;
 
-      const localY = clientY - element.y;
-      const localX = clientX - element.x;
+      const boxRectangle = htmlDoppableElement.getBoundingClientRect();
+
+      const localX = clientX - boxRectangle.x - element.width / 2;
+      const localY = clientY - boxRectangle.y - element.height / 2;
 
       console.log(
         "htmlDoppableElement",
         htmlDoppableElement.getBoundingClientRect()
       );
+
+      console.log("element", element);
 
       console.log("clientX", clientX);
       console.log("clientY", clientY);
@@ -145,7 +149,23 @@ export default function CanvasProvider(props: {
     },
     [elements]
   );
+  /**
+  * pageX 680.5518188476562
+    pageY 325.4104919433594
 
+    deltaX: 56.04
+    deltaY: 34.01
+
+    screenX 748.70703125
+    screenY 470.3515625
+
+    cursorXCoords = pageX + deltaX
+    cursorYCoords = pageY + deltaY
+
+    offsetX 56.598731994628906
+    offsetY -14.205960273742676
+  * 
+  */
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -154,6 +174,7 @@ export default function CanvasProvider(props: {
 
       const element = elements.find((element) => element.id === id);
       console.log(element);
+      console.log("event", event);
 
       const isDropping = overId && overId !== id && overId !== "canvas";
 
@@ -161,7 +182,6 @@ export default function CanvasProvider(props: {
 
       // Element being dropped inside another.
       if (isDropping && element) {
-        console.log("event", event);
         groupElement(id, overId, event);
         return;
       }
