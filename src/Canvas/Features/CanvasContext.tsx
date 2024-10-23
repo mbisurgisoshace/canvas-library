@@ -165,7 +165,23 @@ export default function CanvasProvider(props: {
     },
     [elements]
   );
+  /**
+  * pageX 680.5518188476562
+    pageY 325.4104919433594
 
+    deltaX: 56.04
+    deltaY: 34.01
+
+    screenX 748.70703125
+    screenY 470.3515625
+
+    cursorXCoords = pageX + deltaX
+    cursorYCoords = pageY + deltaY
+
+    offsetX 56.598731994628906
+    offsetY -14.205960273742676
+  * 
+  */
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
