@@ -5,12 +5,14 @@ import { CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 
+type SelectedElement = { elementId: string; parentId?: string };
+
 type CanvasContextType = {
   elements: CanvasObject[];
   unselectElement: () => void;
-  selectedElement: string | null;
+  selectedElement: SelectedElement | null;
   onDragEnd: (event: DragEndEvent) => void;
-  selectElement: (elementId: string) => void;
+  selectElement: (selectedElement: SelectedElement) => void;
   onResizing: (
     event: MouseEvent | TouchEvent,
     direction: Direction,
@@ -42,7 +44,9 @@ export default function CanvasProvider(props: {
 }) {
   const { children } = props;
 
-  const [selectedElement, selectElement] = useState<string | null>(null);
+  const [selectedElement, selectElement] = useState<SelectedElement | null>(
+    null
+  );
   const [currentResizeDelta, updateCurrentResizeDelta] = useState({
     x: 0,
     y: 0,
@@ -53,21 +57,38 @@ export default function CanvasProvider(props: {
 
   const resize = useCallback(
     (deltaX: number, deltaY: number, resizing: boolean) => {
-      const id = selectedElement;
+      const { elementId, parentId } = selectedElement as SelectedElement;
 
       if (!resizing) {
         updateCurrentResizeDelta({ x: 0, y: 0 });
         return;
       }
 
-      if (!id) return;
+      if (!elementId) return;
 
-      const element = elements.find((element) => element.id === id);
-      if (element) {
-        element.width += deltaX - currentResizeDelta.x;
-        element.height += deltaY - currentResizeDelta.y;
-        setElements([...elements]);
-        updateCurrentResizeDelta({ x: deltaX, y: deltaY });
+      if (parentId) {
+        const parentElement = elements.find(
+          (element) => element.id === parentId
+        );
+        if (parentElement) {
+          const element = parentElement.children.find(
+            (element) => element.id === elementId
+          );
+          if (element) {
+            element.width += deltaX - currentResizeDelta.x;
+            element.height += deltaY - currentResizeDelta.y;
+            setElements([...elements]);
+            updateCurrentResizeDelta({ x: deltaX, y: deltaY });
+          }
+        }
+      } else {
+        const element = elements.find((element) => element.id === elementId);
+        if (element) {
+          element.width += deltaX - currentResizeDelta.x;
+          element.height += deltaY - currentResizeDelta.y;
+          setElements([...elements]);
+          updateCurrentResizeDelta({ x: deltaX, y: deltaY });
+        }
       }
     },
     [elements, selectedElement, currentResizeDelta]
@@ -79,6 +100,7 @@ export default function CanvasProvider(props: {
       droppableElementId: UniqueIdentifier,
       event: DragEndEvent
     ) => {
+      const { active, over } = event;
       const droppableElement = elements.find(
         (element) => element.id === droppableElementId
       )!;
@@ -90,30 +112,28 @@ export default function CanvasProvider(props: {
       )!;
       elements.splice(droppedElementIdx, 1);
 
-      const clientX = event.activatorEvent.clientX;
-      const clientY = event.activatorEvent.clientY;
+      const containerRect = document
+        .getElementById(droppableElementId as string)
+        ?.getBoundingClientRect();
 
-      const htmlDoppableElement = document.getElementById(
-        droppableElementId.toString()
-      )!;
+      const draggableRect = active.rect.current.translated;
+      const { x: clientX, y: clientY } = event.delta;
 
-      const localY = clientY - element.y;
-      const localX = clientX - element.x;
+      // // const clientX = event.activatorEvent.clientX;
+      // // const clientY = event.activatorEvent.clientY;
 
-      console.log(
-        "htmlDoppableElement",
-        htmlDoppableElement.getBoundingClientRect()
-      );
+      // const localY = clientY - element.y;
+      // const localX = clientX - element.x;
 
-      console.log("clientX", clientX);
-      console.log("clientY", clientY);
-      console.log("localX", localX);
-      console.log("localY", localY);
+      const newX = draggableRect!.left - containerRect!.left;
+      const newY = draggableRect!.top - containerRect!.top;
 
       droppableElement.children.push({
         ...element,
-        x: localX,
-        y: localY,
+        // x: localX,
+        // y: localY,
+        y: newY,
+        x: newX,
         parentId: droppableElement.id,
       });
       setElements([...elements]);
@@ -153,7 +173,6 @@ export default function CanvasProvider(props: {
       const parentId = event.active.data?.current?.parentId;
 
       const element = elements.find((element) => element.id === id);
-      console.log(element);
 
       const isDropping = overId && overId !== id && overId !== "canvas";
 
@@ -161,7 +180,6 @@ export default function CanvasProvider(props: {
 
       // Element being dropped inside another.
       if (isDropping && element) {
-        console.log("event", event);
         groupElement(id, overId, event);
         return;
       }

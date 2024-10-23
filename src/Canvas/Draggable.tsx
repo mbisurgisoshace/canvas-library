@@ -53,14 +53,14 @@ export default function Draggable({ canvasObject }: DraggableProps) {
         position: "absolute",
         backgroundColor: "white",
         zIndex: isDragging ? 100 : "",
-        border: `1px solid ${selectedElement === id ? "#0984e3" : "black"}`,
+        border: `1px solid ${
+          selectedElement?.elementId === id ? "#0984e3" : "black"
+        }`,
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
           : undefined,
       }}
       onPointerDown={(e) => {
-        selectElement(id);
-
         const isResizeHandle = (
           e.target as HTMLDivElement
         ).offsetParent?.className.includes("resizable");
@@ -68,6 +68,8 @@ export default function Draggable({ canvasObject }: DraggableProps) {
         if (isResizeHandle) {
           return;
         }
+
+        selectElement({ elementId: id, parentId });
 
         if (listeners && listeners.onPointerDown) {
           listeners.onPointerDown(e);
