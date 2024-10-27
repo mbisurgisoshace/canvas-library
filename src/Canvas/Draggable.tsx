@@ -33,7 +33,7 @@ export default function Draggable({ canvasObject, base }: DraggableProps) {
 			},
 		});
 
-	const combinedRef = (el: HTMLDivElement) => {
+	const combinedRef = (el: HTMLDivElement | SVGGElement) => {
 		setNodeRef(el);
 		setDroppableRef(el);
 	};
@@ -41,9 +41,10 @@ export default function Draggable({ canvasObject, base }: DraggableProps) {
 	const [isResizing, setIsResizing] = useState(false);
 	const [resizeHandle, setResizeHandle] = useState<string | null>(null);
 	const [rectSize, setRectSize] = useState({ width, height });
-	const gRef = useRef<SVGGElement | null>(null);
+	// const gRef = useRef<SVGGElement | null>(null);
 	const startX = useRef<number | null>(null);
 	const startY = useRef<number | null>(null);
+	// console.log(transform);
 
 	const draggedX = transform ? x + transform.x : x;
 	const draggedY = transform ? y + transform.y : y;
@@ -114,8 +115,9 @@ export default function Draggable({ canvasObject, base }: DraggableProps) {
 	if (base === "web-canvas") {
 		return (
 			<g
+				id={id}
 				className="draggable"
-				ref={gRef}
+				ref={combinedRef}
 				{...listeners}
 				{...attributes}
 				onPointerDown={(e) => {
@@ -164,6 +166,9 @@ export default function Draggable({ canvasObject, base }: DraggableProps) {
 					cursor="ns-resize"
 					onPointerDown={handleResizeStart("bottom")}
 				/>
+				{children.map((child) => (
+					<Draggable key={child.id} canvasObject={child} base={base} />
+				))}
 			</g>
 		);
 	}

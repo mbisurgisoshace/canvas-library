@@ -90,29 +90,69 @@ export default function CanvasProvider(props: {
 			)!;
 			elements.splice(droppedElementIdx, 1);
 
+			console.log("my elements", elements);
+
+			console.log("event.activatorEvent", event);
+
 			const clientX = event.activatorEvent.clientX + event.delta.x;
 			const clientY = event.activatorEvent.clientY + event.delta.y;
 
-			const htmlDoppableElement = document.getElementById(
-				droppableElementId.toString()
-			)!;
+			// const htmlDoppableElement = document.getElementById(
+			// 	droppableElementId.toString()
+			// )!;
+			// console.log("htmlDoppableElement", htmlDoppableElement);
 
-			const boxRectangle = htmlDoppableElement.getBoundingClientRect();
+			// const boxRectangle = htmlDoppableElement.getBoundingClientRect();
 
-			const localX = clientX - boxRectangle.x - element.width / 2;
-			const localY = clientY - boxRectangle.y - element.height / 2;
+			// const localX = clientX - boxRectangle.x - element.width / 2;
+			// const localY = clientY - boxRectangle.y - element.height / 2;
 
-			console.log(
-				"htmlDoppableElement",
-				htmlDoppableElement.getBoundingClientRect()
-			);
+			// console.log(
+			// 	"htmlDoppableElement",
+			// 	htmlDoppableElement.getBoundingClientRect()
+			// );
 
-			console.log("element", element);
+			// console.log("element", element);
 
-			console.log("clientX", clientX);
-			console.log("clientY", clientY);
-			console.log("localX", localX);
-			console.log("localY", localY);
+			// console.log("clientX", clientX);
+			// console.log("clientY", clientY);
+			// console.log("localX", localX);
+			// console.log("localY", localY);
+
+			const convertToLocalCoordinates = (
+				clientX: number,
+				clientY: number
+			): { x: number; y: number } => {
+				const gElement = document.querySelector(
+					".zoomablePannableArea"
+				) as SVGGElement;
+				if (!gElement) return { x: clientX, y: clientY };
+
+				const point = gElement.ownerSVGElement?.createSVGPoint();
+				if (!point) return { x: clientX, y: clientY };
+
+				point.x = clientX;
+				point.y = clientY;
+
+				const ctm = gElement.getScreenCTM()?.inverse();
+				if (!ctm) return { x: clientX, y: clientY };
+
+				const localPoint = point.matrixTransform(ctm);
+				return { x: localPoint.x, y: localPoint.y };
+			};
+
+			// Convert screen coordinates to local coordinates for SVG
+			const localCoords = convertToLocalCoordinates(clientX, clientY);
+
+			const localX = localCoords.x - element.width / 2;
+			const localY = localCoords.y - element.height / 2;
+
+			console.log("SVG Coordinates:", {
+				clientX,
+				clientY,
+				localX,
+				localY,
+			});
 
 			droppableElement.children.push({
 				...element,
@@ -135,6 +175,8 @@ export default function CanvasProvider(props: {
 			const parentElement = elements.find(
 				(element) => element.id === parentId
 			)!;
+
+			console.log("parentElements", parentElement);
 
 			parentElement.children = parentElement.children.map((child) =>
 				child.id === draggableElementId
@@ -173,8 +215,8 @@ export default function CanvasProvider(props: {
 			const parentId = event.active.data?.current?.parentId;
 
 			const element = elements.find((element) => element.id === id);
-			console.log(element);
-			console.log("event", event);
+			// console.log(element);
+			// console.log("event", event);
 
 			const isDropping = overId && overId !== id && overId !== "canvas";
 
@@ -186,6 +228,9 @@ export default function CanvasProvider(props: {
 				return;
 			}
 			// Element being dragged within a parent.
+
+			console.log("parentId", parentId);
+
 			if (parentId) {
 				dragWithinParent(id, parentId, event.delta.x, event.delta.y);
 				return;
