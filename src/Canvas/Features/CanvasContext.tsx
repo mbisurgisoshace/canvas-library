@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from "uuid";
 import { NumberSize } from "re-resizable";
 import { useContext, createContext, useState, useCallback } from "react";
 
@@ -12,6 +13,7 @@ type CanvasContextType = {
   unselectElement: () => void;
   selectedElement: SelectedElement | null;
   onDragEnd: (event: DragEndEvent) => void;
+  setLayout: (elementId: string, layout: "free" | "grid") => void;
   selectElement: (selectedElement: SelectedElement) => void;
   onResizing: (
     event: MouseEvent | TouchEvent,
@@ -92,6 +94,63 @@ export default function CanvasProvider(props: {
       }
     },
     [elements, selectedElement, currentResizeDelta]
+  );
+
+  const addElement = useCallback(
+    (
+      droppedElementId: UniqueIdentifier,
+      droppableElementId: UniqueIdentifier,
+      event: DragEndEvent
+    ) => {
+      const { active, over } = event;
+
+      let newBlock: CanvasObject;
+
+      const droppableElement = elements.find(
+        (element) => element.id === droppableElementId
+      )!;
+
+      const containerRect = document
+        .getElementById(droppableElementId as string)
+        ?.getBoundingClientRect();
+
+      const draggableRect = active.rect.current.translated;
+      const { x: clientX, y: clientY } = event.delta;
+
+      const newX = draggableRect!.left - containerRect!.left;
+      const newY = draggableRect!.top - containerRect!.top;
+
+      if (droppedElementId === "input") {
+        newBlock = {
+          id: uuidv4(),
+          x: newX,
+          y: newY,
+          width: 150,
+          height: 32,
+          children: [],
+          blockType: "input",
+        };
+      }
+
+      if (droppedElementId === "button") {
+        newBlock = {
+          id: uuidv4(),
+          x: newX,
+          y: newY,
+          width: 150,
+          height: 32,
+          children: [],
+          blockType: "button",
+        };
+      }
+
+      droppableElement.children.push({
+        ...newBlock!,
+        parentId: droppableElement.id,
+      });
+      setElements([...elements]);
+    },
+    [elements]
   );
 
   const groupElement = useCallback(
@@ -188,6 +247,14 @@ export default function CanvasProvider(props: {
       const overId = event.over?.id;
       const parentId = event.active.data?.current?.parentId;
 
+      console.log("id", id);
+      console.log("overId", overId);
+
+      if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
+        addElement(id, overId, event);
+        return;
+      }
+
       const element = elements.find((element) => element.id === id);
 
       const isDropping = overId && overId !== id && overId !== "canvas";
@@ -245,9 +312,21 @@ export default function CanvasProvider(props: {
     event.stopPropagation();
   };
 
+  const setLayout = (elementId: string, layout: "free" | "grid") => {
+    const element = elements.find((element) => element.id === elementId);
+    if (!element) return;
+
+    element.layout = {
+      display: layout,
+    };
+
+    setElements([...elements]);
+  };
+
   const value = {
     elements,
     onDragEnd,
+    setLayout,
     onResizing,
     onResizeStop,
     onResizeStart,

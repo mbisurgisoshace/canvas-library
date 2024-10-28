@@ -1,5 +1,6 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
+import { BlocksIcon } from "lucide-react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
@@ -17,6 +18,7 @@ import ZoomControl from "./Tools/ZoomControl";
 import Droppable from "./Droppable";
 import { useCanvas } from "./Features/CanvasContext";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
+import { DraggableUiElement } from "./DraggableUiElement";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -31,6 +33,30 @@ interface CanvasDefaultProps {
 type ZoomEvent = { transform: Transform; sourceEvent: React.MouseEvent };
 type Transform = { x: number; y: number; k: number };
 type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
+
+const UI_BLOCKS = [
+  {
+    id: "input",
+    uiComponent: (
+      <input
+        className="border border-slate-700 h-8 rounded-md px-2 w-full"
+        placeholder="Input"
+        disabled
+      />
+    ),
+  },
+  {
+    id: "button",
+    uiComponent: (
+      <button
+        disabled
+        className="h-8 rounded-md border w-full border-slate-700 p-0 px-2 hover:border-slate-700"
+      >
+        Button
+      </button>
+    ),
+  },
+];
 
 export default function CanvasModule(props: CanvasProps) {
   const {
@@ -100,6 +126,7 @@ export default function CanvasModule(props: CanvasProps) {
     <DndContext
       onDragEnd={(e) => {
         setActive(null);
+
         onDragEnd(e);
       }}
       onDragStart={(data) => {
@@ -110,6 +137,22 @@ export default function CanvasModule(props: CanvasProps) {
         active && active.data.current ? active.data.current.modifiers : []
       }
     >
+      <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
+        <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
+          UI Elements
+          <BlocksIcon />
+        </h3>
+
+        <div className="mt-3 flex flex-col gap-5">
+          {UI_BLOCKS.map((block) => (
+            <DraggableUiElement
+              key={block.id}
+              id={block.id}
+              uiComponent={block.uiComponent}
+            />
+          ))}
+        </div>
+      </div>
       <Droppable
         id="canvas"
         style={{
