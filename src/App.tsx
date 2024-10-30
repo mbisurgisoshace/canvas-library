@@ -26,8 +26,8 @@ function App() {
       id: "3",
       x: 250,
       y: 100,
-      width: 350,
-      height: 650,
+      width: 400,
+      height: 750,
       children: [],
       blockType: "screen",
       layout: {

@@ -179,11 +179,11 @@ export default function Draggable({ canvasObject }: DraggableProps) {
             e.target as HTMLDivElement
           ).offsetParent?.className.includes("resizable");
 
+          selectElement({ elementId: id, parentId });
+
           if (isResizeHandle) {
             return;
           }
-
-          selectElement({ elementId: id, parentId });
 
           if (listeners && listeners.onPointerDown) {
             listeners.onPointerDown(e);
@@ -192,10 +192,18 @@ export default function Draggable({ canvasObject }: DraggableProps) {
           }
         }}
       >
-        <input
-          className="border border-slate-700 h-8 rounded-md px-2 w-full"
-          placeholder="Input"
-        />
+        <Resizable
+          className="resizable"
+          onResize={onResizing}
+          size={{ width, height }}
+          onResizeStop={onResizeStop}
+          onResizeStart={onResizeStart}
+        >
+          <input
+            className="border border-slate-700 h-8 rounded-md px-2 w-full"
+            placeholder="Input"
+          />
+        </Resizable>
       </div>
     );
 
@@ -241,9 +249,17 @@ export default function Draggable({ canvasObject }: DraggableProps) {
           }
         }}
       >
+        {/* <Resizable
+          className="resizable"
+          onResize={onResizing}
+          size={{ width, height }}
+          onResizeStop={onResizeStop}
+          onResizeStart={onResizeStart}
+        > */}
         <button className="border border-slate-700 h-8 rounded-md px-2 w-full flex items-center justify-center">
           Button
         </button>
+        {/* </Resizable> */}
       </div>
     );
 
@@ -304,33 +320,4 @@ export default function Draggable({ canvasObject }: DraggableProps) {
       </Resizable>
     </div>
   );
-}
-
-{
-  /* <ContextMenu>
-          <ContextMenuTrigger>
-            <Resizable
-              className="resizable"
-              onResize={onResizing}
-              size={{ width, height }}
-              onResizeStop={onResizeStop}
-              onResizeStart={onResizeStart}
-              style={{
-                ...layoutProps(),
-              }}
-            >
-              {children.map((child) => (
-                <Draggable key={child.id} canvasObject={child} />
-              ))}
-            </Resizable>
-          </ContextMenuTrigger>
-          <ContextMenuContent>
-            <ContextMenuItem onClick={() => console.log("free")}>
-              Free
-            </ContextMenuItem>
-            <ContextMenuItem onClick={() => setLayout(id, "grid")}>
-              Grid
-            </ContextMenuItem>
-          </ContextMenuContent>
-        </ContextMenu> */
 }
