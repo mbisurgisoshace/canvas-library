@@ -33,6 +33,8 @@ export interface CanvasObject {
     display: "free" | "grid" | "flex";
   };
   children: CanvasObject[];
+  colSpan?: number;
+  colNumber?: number;
 }
 
 /**

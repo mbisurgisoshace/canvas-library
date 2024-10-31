@@ -313,15 +313,14 @@ export default function CanvasProvider(props: {
               if (id.toString().includes("block-")) {
                 // It is an element already on the screen
                 const element = document.getElementById(id.toString())!;
-                const currentColumn = element.parentElement as HTMLDivElement;
-                const currentRow =
-                  currentColumn?.parentElement as HTMLDivElement;
+                // const currentColumn = element.parentElement as HTMLDivElement;
+                const currentRow = element?.parentElement as HTMLDivElement;
                 const currentScreen =
                   currentRow?.parentElement as HTMLDivElement;
 
-                if (currentScreen && currentRow && currentColumn) {
+                if (currentScreen && currentRow) {
                   const currentRowId = currentRow.id;
-                  const currentColId = currentColumn.id;
+                  //const currentColId = currentColumn.id;
                   const currentScreenId = currentScreen.id;
 
                   const currentScreenBlock = elements.find(
@@ -332,26 +331,40 @@ export default function CanvasProvider(props: {
                     (element) => element.id === currentRowId
                   );
 
-                  const currentColumnBlock = currentRowBlock?.children.find(
-                    (element) => element.id === currentColId
-                  );
+                  // const currentColumnBlock = currentRowBlock?.children.find(
+                  //   (element) => element.id === currentColId
+                  // );
 
-                  if (currentColumnBlock) {
-                    const elementBlock = currentColumnBlock?.children.find(
+                  // if (currentColumnBlock) {
+                  //   const elementBlock = currentColumnBlock?.children.find(
+                  //     (element) => element.id === id.toString()
+                  //   );
+                  //   currentColumnBlock.children =
+                  //     currentColumnBlock?.children.filter(
+                  //       (element) => element.id !== id.toString()
+                  //     );
+
+                  //   columnBlock?.children.push(elementBlock!);
+                  // }
+
+                  if (currentRowBlock) {
+                    const elementBlock = currentRowBlock?.children.find(
                       (element) => element.id === id.toString()
                     );
-                    currentColumnBlock.children =
-                      currentColumnBlock?.children.filter(
-                        (element) => element.id !== id.toString()
-                      );
+                    console.log("elementBlock", elementBlock);
 
-                    columnBlock?.children.push(elementBlock!);
+                    currentRowBlock.children = currentRowBlock?.children.filter(
+                      (element) => element.id !== id.toString()
+                    );
+
+                    currentRowBlock?.children.push(elementBlock!);
                   }
                 }
               } else if (id.toString().includes("ui-")) {
                 // Create a new element on the screen
                 const newBlock = createBlock(id.toString());
-                columnBlock?.children.push(newBlock);
+                //columnBlock?.children.push(newBlock);
+                rowBlock?.children.push(newBlock);
               }
 
               setElements([...elements]);
@@ -373,6 +386,8 @@ export default function CanvasProvider(props: {
     },
     [elements]
   );
+
+  console.log("elements", elements);
 
   const createBlock = (uiBlockId: string): CanvasObject => {
     let blockType: BlockType = "block";

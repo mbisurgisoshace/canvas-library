@@ -38,7 +38,7 @@ export default function Screen({ canvasObject }: ScreenProps) {
         height,
         top: y,
         left: x,
-        padding: 10,
+        //padding: 10,
         position: "absolute",
         backgroundColor: "white",
         zIndex: isDragging ? 100 : "",
