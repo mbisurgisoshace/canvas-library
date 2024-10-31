@@ -12,7 +12,13 @@ export type FullSizeCanvas = { canvasSize: "full" };
 /**
  * Canvas Object types
  */
-export type BlockType = "block" | "screen" | "input" | "button";
+export type BlockType =
+  | "block"
+  | "screen"
+  | "input"
+  | "button"
+  | "grid-row"
+  | "grid-column";
 export interface CanvasObject {
   x: number;
   y: number;

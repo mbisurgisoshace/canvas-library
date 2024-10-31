@@ -2,7 +2,7 @@ import { v4 as uuidv4 } from "uuid";
 import { NumberSize } from "re-resizable";
 import { useContext, createContext, useState, useCallback } from "react";
 
-import { CanvasObject } from "../types";
+import { BlockType, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
 
@@ -241,45 +241,157 @@ export default function CanvasProvider(props: {
     offsetY -14.205960273742676
   * 
   */
+  // const onDragEnd = useCallback(
+  //   (event: DragEndEvent) => {
+  //     const id = event.active.id;
+  //     const overId = event.over?.id;
+  //     const parentId = event.active.data?.current?.parentId;
+
+  //     console.log("id", id);
+  //     console.log("overId", overId);
+
+  //     // if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
+  //     //   addElement(id, overId, event);
+  //     //   return;
+  //     // }
+
+  //     // const element = elements.find((element) => element.id === id);
+
+  //     // const isDropping = overId && overId !== id && overId !== "canvas";
+
+  //     // //if (!element) return;
+
+  //     // // Element being dropped inside another.
+  //     // if (isDropping && element) {
+  //     //   groupElement(id, overId, event);
+  //     //   return;
+  //     // }
+  //     // // Element being dragged within a parent.
+  //     // if (parentId) {
+  //     //   dragWithinParent(id, parentId, event.delta.x, event.delta.y);
+  //     //   return;
+  //     // }
+
+  //     // if (element) {
+  // element.x += event.delta.x;
+  // element.y += event.delta.y;
+  // setElements([...elements]);
+  //     // }
+  //   },
+  //   [elements, groupElement, dragWithinParent]
+  // );
+
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
       const overId = event.over?.id;
-      const parentId = event.active.data?.current?.parentId;
 
-      console.log("id", id);
-      console.log("overId", overId);
+      if (!id.toString().includes("screen-") && overId !== "canvas") {
+        const column = document.getElementById(overId as string);
 
-      if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
-        addElement(id, overId, event);
+        if (column) {
+          const row = column.parentElement as HTMLDivElement;
+
+          if (row) {
+            const screen = row.parentElement as HTMLDivElement;
+
+            if (screen) {
+              const colId = overId;
+              const rowId = row.id;
+              const screenId = screen.id;
+
+              const screenBlock = elements.find(
+                (element) => element.id === screenId
+              );
+              const rowBlock = screenBlock?.children.find(
+                (element) => element.id === rowId
+              );
+              const columnBlock = rowBlock?.children.find(
+                (element) => element.id === colId
+              );
+
+              if (id.toString().includes("block-")) {
+                // It is an element already on the screen
+                const element = document.getElementById(id.toString())!;
+                const currentColumn = element.parentElement as HTMLDivElement;
+                const currentRow =
+                  currentColumn?.parentElement as HTMLDivElement;
+                const currentScreen =
+                  currentRow?.parentElement as HTMLDivElement;
+
+                if (currentScreen && currentRow && currentColumn) {
+                  const currentRowId = currentRow.id;
+                  const currentColId = currentColumn.id;
+                  const currentScreenId = currentScreen.id;
+
+                  const currentScreenBlock = elements.find(
+                    (element) => element.id === currentScreenId
+                  );
+
+                  const currentRowBlock = currentScreenBlock?.children.find(
+                    (element) => element.id === currentRowId
+                  );
+
+                  const currentColumnBlock = currentRowBlock?.children.find(
+                    (element) => element.id === currentColId
+                  );
+
+                  if (currentColumnBlock) {
+                    const elementBlock = currentColumnBlock?.children.find(
+                      (element) => element.id === id.toString()
+                    );
+                    currentColumnBlock.children =
+                      currentColumnBlock?.children.filter(
+                        (element) => element.id !== id.toString()
+                      );
+
+                    columnBlock?.children.push(elementBlock!);
+                  }
+                }
+              } else if (id.toString().includes("ui-")) {
+                // Create a new element on the screen
+                const newBlock = createBlock(id.toString());
+                columnBlock?.children.push(newBlock);
+              }
+
+              setElements([...elements]);
+            }
+          }
+        }
+
         return;
       }
 
-      const element = elements.find((element) => element.id === id);
-
-      const isDropping = overId && overId !== id && overId !== "canvas";
-
-      //if (!element) return;
-
-      // Element being dropped inside another.
-      if (isDropping && element) {
-        groupElement(id, overId, event);
-        return;
-      }
-      // Element being dragged within a parent.
-      if (parentId) {
-        dragWithinParent(id, parentId, event.delta.x, event.delta.y);
-        return;
-      }
-
-      if (element) {
-        element.x += event.delta.x;
-        element.y += event.delta.y;
+      if (id.toString().includes("screen-")) {
+        const screen = elements.find((element) => element.id === id)!;
+        screen.x += event.delta.x;
+        screen.y += event.delta.y;
         setElements([...elements]);
+
+        return;
       }
     },
-    [elements, groupElement, dragWithinParent]
+    [elements]
   );
+
+  const createBlock = (uiBlockId: string): CanvasObject => {
+    let blockType: BlockType = "block";
+
+    if (uiBlockId === "ui-input") blockType = "input";
+    if (uiBlockId === "ui-button") blockType = "button";
+
+    const newBlock: CanvasObject = {
+      id: `block-${uuidv4()}`,
+      x: 0,
+      y: 0,
+      width: 150,
+      height: 32,
+      children: [],
+      blockType,
+    };
+
+    return newBlock;
+  };
 
   const onResizing = (
     event: MouseEvent | TouchEvent,

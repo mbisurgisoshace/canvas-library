@@ -19,6 +19,7 @@ import Droppable from "./Droppable";
 import { useCanvas } from "./Features/CanvasContext";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { DraggableUiElement } from "./DraggableUiElement";
+import Block from "./Blocks/Block";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -36,7 +37,7 @@ type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
 
 const UI_BLOCKS = [
   {
-    id: "input",
+    id: "ui-input",
     uiComponent: (
       <input
         className="border border-slate-700 h-8 rounded-md px-2 w-full"
@@ -46,7 +47,7 @@ const UI_BLOCKS = [
     ),
   },
   {
-    id: "button",
+    id: "ui-button",
     uiComponent: (
       <button
         disabled
@@ -181,8 +182,11 @@ export default function CanvasModule(props: CanvasProps) {
               transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
             }}
           >
-            {elements.map((element) => (
+            {/* {elements.map((element) => (
               <Draggable key={element.id} canvasObject={element} />
+            ))} */}
+            {elements.map((element) => (
+              <Block key={element.id} canvasObject={element} />
             ))}
           </div>
         </div>

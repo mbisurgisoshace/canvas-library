@@ -1,40 +1,105 @@
+import { v4 as uuidv4 } from "uuid";
+
 import "./App.css";
+
 import Canvas from "./Canvas";
 import { CanvasObject } from "./Canvas/types";
 
 function App() {
   const elements: CanvasObject[] = [
-    // {
-    //   id: "1",
-    //   x: 50,
-    //   y: 100,
-    //   width: 100,
-    //   height: 100,
-    //   children: [],
-    //   blockType: "block",
-    // },
-    // {
-    //   id: "2",
-    //   x: 100,
-    //   y: 500,
-    //   width: 150,
-    //   height: 100,
-    //   children: [],
-    //   blockType: "block",
-    // },
     {
-      id: "3",
+      id: `screen-${uuidv4()}`,
       x: 250,
       y: 100,
       width: 400,
       height: 750,
-      children: [],
+      children: [
+        {
+          blockType: "grid-row",
+          id: `grid-row-${uuidv4()}`,
+          x: 0,
+          y: 0,
+          width: 400,
+          height: 250,
+          children: [
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+          ],
+        },
+        {
+          blockType: "grid-row",
+          id: `grid-row-${uuidv4()}`,
+          x: 0,
+          y: 0,
+          width: 400,
+          height: 250,
+          children: [
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+          ],
+        },
+        {
+          blockType: "grid-row",
+          id: `grid-row-${uuidv4()}`,
+          x: 0,
+          y: 0,
+          width: 400,
+          height: 250,
+          children: [
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+            {
+              blockType: "grid-column",
+              id: `grid-column-${uuidv4()}`,
+              x: 0,
+              y: 0,
+              width: 200,
+              height: 250,
+              children: [],
+            },
+          ],
+        },
+      ],
       blockType: "screen",
-      layout: {
-        rows: 2,
-        columns: 4,
-        display: "flex",
-      },
     },
   ];
 
