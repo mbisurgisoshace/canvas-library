@@ -27,14 +27,9 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
     <div
       ref={combinedRef}
       id={id}
-      style={{
-        width,
-        top: 0,
-        left: x,
-        height: "100%",
-        position: "absolute",
-      }}
-      className={`${isOver ? "bg-red-500/20" : ""}`}
-    ></div>
+      className={`flex-1 ${isOver ? "bg-red-500/20" : ""}`}
+    >
+      {children.length > 0 && <Block canvasObject={children[0]} />}
+    </div>
   );
 }

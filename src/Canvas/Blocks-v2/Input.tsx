@@ -39,7 +39,7 @@ export default function Input({ canvasObject }: InputProps) {
     >
       <input
         placeholder="Input"
-        className="border border-slate-700 h-8 rounded-md px-2 w-full"
+        className="input border border-slate-700 h-8 rounded-md px-2 w-full"
       />
       {/* <div className="border border-slate-700 h-8 rounded-md px-2 w-full flex items-center">
         Input

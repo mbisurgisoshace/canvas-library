@@ -4,7 +4,7 @@ import { BlocksIcon } from "lucide-react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
-import "./styles.css";
+import "../styles.css";
 
 import {
   Base,
@@ -12,14 +12,12 @@ import {
   CanvasObject,
   FullSizeCanvas,
   CustomSizeCanvas,
-} from "./types";
-import Draggable from "./Draggable";
-import ZoomControl from "./Tools/ZoomControl";
-import Droppable from "./Droppable";
-import { useCanvas } from "./Features/CanvasContext";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import { DraggableUiElement } from "./DraggableUiElement";
-import Block from "./Blocks-v1/Block";
+} from "../types";
+import ZoomControl from "../Tools/ZoomControl";
+import Droppable from "../Droppable";
+import { useCanvas } from "./CanvasContext";
+import { DraggableUiElement } from "../DraggableUiElement";
+import Block from "../Blocks-v1/Block";
 
 interface CanvasDefaultProps {
   base: Base;

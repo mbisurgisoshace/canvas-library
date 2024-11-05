@@ -2,7 +2,7 @@ import { useDraggable, useDroppable } from "@dnd-kit/core";
 
 import { CanvasObject } from "../types";
 import Block, { BlockProps } from "./Block";
-import { useCanvas } from "../Features/CanvasContext";
+import { useCanvas } from "./CanvasContext";
 
 interface ScreenProps extends BlockProps {}
 
