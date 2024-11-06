@@ -20,6 +20,7 @@ import { useCanvas } from "./CanvasContext";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { DraggableUiElement } from "../DraggableUiElement";
 import Block from "./Block";
+import { FeaturesTable } from "../FeaturesTable";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -154,6 +155,14 @@ export default function CanvasModule(props: CanvasProps) {
           ))}
         </div>
       </div>
+
+      <FeaturesTable
+        features={[
+          { name: "Dragging to individual cells", isWorking: true },
+          { name: "Column span", isWorking: false },
+        ]}
+      />
+
       <Droppable
         id="canvas"
         style={{

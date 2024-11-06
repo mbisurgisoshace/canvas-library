@@ -18,6 +18,7 @@ import Droppable from "../Droppable";
 import { useCanvas } from "./CanvasContext";
 import { DraggableUiElement } from "../DraggableUiElement";
 import Block from "../Blocks-v1/Block";
+import { FeaturesTable } from "../FeaturesTable";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -152,6 +153,14 @@ export default function CanvasModule(props: CanvasProps) {
           ))}
         </div>
       </div>
+
+      <FeaturesTable
+        features={[
+          { name: "Dragging to individual cells", isWorking: false },
+          { name: "Column span", isWorking: true },
+        ]}
+      />
+
       <Droppable
         id="canvas"
         style={{
