@@ -19,13 +19,13 @@ export const FeaturesTable = ({ features }: FeaturesTableProps) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[250px]">Description</TableHead>
-          <TableHead>Is Working</TableHead>
+          <TableHead className="w-[300px]">Feature Description</TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {features.map((feature) => (
-          <TableRow>
+          <TableRow key={feature.name}>
             <TableCell className="font-medium">{feature.name}</TableCell>
             <TableCell>
               {feature.isWorking ? (

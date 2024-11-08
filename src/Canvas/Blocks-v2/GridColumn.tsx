@@ -19,9 +19,7 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
     setDroppableRef(el);
   };
 
-  useEffect(() => {
-    console.log("ref", ref);
-  }, [ref]);
+  useEffect(() => {}, [ref]);
 
   return (
     <div

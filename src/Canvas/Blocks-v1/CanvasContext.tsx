@@ -53,7 +53,6 @@ export default function CanvasProvider(props: {
     x: 0,
     y: 0,
   });
-  console.log("props.elements", props.elements);
 
   const [elements, setElements] = useState<CanvasObject[]>(props.elements);
 
@@ -311,6 +310,10 @@ export default function CanvasProvider(props: {
               const columnBlock = rowBlock?.children.find(
                 (element) => element.id === colId
               );
+
+              if (columnBlock?.children.length) {
+                return;
+              }
 
               if (id.toString().includes("block-")) {
                 // It is an element already on the screen

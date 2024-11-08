@@ -160,6 +160,11 @@ export default function CanvasModule(props: CanvasProps) {
         features={[
           { name: "Dragging to individual cells", isWorking: true },
           { name: "Column span", isWorking: false },
+          { name: "Not allowing 2 elements on the same cell", isWorking: true },
+          {
+            name: "Allow editing inputs",
+            isWorking: false,
+          },
         ]}
       />
 

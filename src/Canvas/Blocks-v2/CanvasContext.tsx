@@ -281,6 +281,29 @@ export default function CanvasProvider(props: {
   //   [elements, groupElement, dragWithinParent]
   // );
 
+  const getBlockDomHierarchy = (
+    blockId: string
+  ):
+    | {
+        colElement: HTMLDivElement;
+        rowElement: HTMLDivElement;
+        blockElement: HTMLDivElement;
+      }
+    | undefined => {
+    if (!blockId) return;
+    const blockElement = document.getElementById(blockId)! as HTMLDivElement;
+    if (!blockElement) return;
+
+    const colElement = blockElement.parentElement as HTMLDivElement;
+    const rowElement = colElement.parentElement as HTMLDivElement;
+
+    return {
+      rowElement,
+      colElement,
+      blockElement,
+    };
+  };
+
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -309,6 +332,10 @@ export default function CanvasProvider(props: {
               const columnBlock = rowBlock?.children.find(
                 (element) => element.id === colId
               );
+
+              if (columnBlock?.children.length) {
+                return;
+              }
 
               if (id.toString().includes("block-")) {
                 // It is an element already on the screen
