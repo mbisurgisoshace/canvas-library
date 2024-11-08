@@ -19,14 +19,13 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
     setDroppableRef(el);
   };
 
-  useEffect(() => {
-    console.log("ref", ref);
-  }, [ref]);
+  useEffect(() => {}, [ref]);
 
   return (
     <div
       ref={combinedRef}
       id={id}
+      data-col-number={canvasObject.colNumber}
       className={`${isOver ? "bg-red-500/20" : ""}`}
       style={{
         width,

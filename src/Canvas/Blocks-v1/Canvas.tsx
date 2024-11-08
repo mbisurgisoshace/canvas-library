@@ -156,7 +156,7 @@ export default function CanvasModule(props: CanvasProps) {
 
       <FeaturesTable
         features={[
-          { name: "Dragging to individual cells", isWorking: false },
+          { name: "Dragging to individual cells", isWorking: true },
           { name: "Column span", isWorking: true },
           {
             name: "Not allowing 2 elements on the same cell",

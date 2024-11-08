@@ -35,6 +35,7 @@ export default function Input({ canvasObject }: InputProps) {
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
           : undefined,
+        gridColumnStart: canvasObject.colNumber,
       }}
       // onPointerDown={(e) => {
       //   if ((e.target as HTMLInputElement).classList.contains("input")) {

@@ -292,6 +292,7 @@ export default function CanvasProvider(props: {
 
         if (column) {
           const row = column.parentElement as HTMLDivElement;
+          const colNumber = column.getAttribute("data-col-number");
 
           if (row) {
             const screen = row.parentElement as HTMLDivElement;
@@ -336,38 +337,27 @@ export default function CanvasProvider(props: {
                     (element) => element.id === currentRowId
                   );
 
-                  // const currentColumnBlock = currentRowBlock?.children.find(
-                  //   (element) => element.id === currentColId
-                  // );
-
-                  // if (currentColumnBlock) {
-                  //   const elementBlock = currentColumnBlock?.children.find(
-                  //     (element) => element.id === id.toString()
-                  //   );
-                  //   currentColumnBlock.children =
-                  //     currentColumnBlock?.children.filter(
-                  //       (element) => element.id !== id.toString()
-                  //     );
-
-                  //   columnBlock?.children.push(elementBlock!);
-                  // }
-
                   if (currentRowBlock) {
                     const elementBlock = currentRowBlock?.children.find(
                       (element) => element.id === id.toString()
                     );
-                    console.log("elementBlock", elementBlock);
 
                     currentRowBlock.children = currentRowBlock?.children.filter(
                       (element) => element.id !== id.toString()
                     );
 
-                    currentRowBlock?.children.push(elementBlock!);
+                    rowBlock?.children.push({
+                      ...elementBlock!,
+                      colNumber: parseInt(colNumber!),
+                    });
                   }
                 }
               } else if (id.toString().includes("ui-")) {
                 // Create a new element on the screen
-                const newBlock = createBlock(id.toString());
+                const newBlock = createBlock(
+                  id.toString(),
+                  parseInt(colNumber!)
+                );
                 //columnBlock?.children.push(newBlock);
                 rowBlock?.children.push(newBlock);
               }
@@ -392,7 +382,7 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
-  const createBlock = (uiBlockId: string): CanvasObject => {
+  const createBlock = (uiBlockId: string, colNumber: number): CanvasObject => {
     let blockType: BlockType = "block";
 
     if (uiBlockId === "ui-input") blockType = "input";
@@ -406,6 +396,7 @@ export default function CanvasProvider(props: {
       height: 32,
       children: [],
       blockType,
+      colNumber,
     };
 
     return newBlock;

@@ -25,7 +25,6 @@ export default function GridRow({ canvasObject }: GridRowProps) {
       const columns: CanvasObject[] = [];
       for (let i = 0; i < colNumber; i++) {
         const colWidth = width / colNumber;
-        console.log("width", width, colWidth);
 
         const col: CanvasObject = {
           blockType: "grid-column",
@@ -35,6 +34,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
           height: 250,
           children: [],
           width: colWidth,
+          colNumber: i + 1,
         };
         columns.push(col);
       }
