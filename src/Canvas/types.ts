@@ -16,7 +16,11 @@ export type BlockType =
   | "block"
   | "screen"
   | "input"
+  | "table"
+  | "header"
   | "button"
+  | "select"
+  | "checkbox"
   | "grid-row"
   | "grid-column";
 export interface CanvasObject {
@@ -35,6 +39,13 @@ export interface CanvasObject {
   children: CanvasObject[];
   colSpan?: number;
   colNumber?: number;
+  text?: string;
+  placeholder?: string;
+  label?: string;
+  tableConfig?: {
+    data: string[][];
+    columns: string[];
+  };
 }
 
 /**
