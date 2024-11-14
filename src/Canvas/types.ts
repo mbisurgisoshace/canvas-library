@@ -14,6 +14,7 @@ export type FullSizeCanvas = { canvasSize: "full" };
  */
 export type BlockType =
   | "block"
+  | "label"
   | "screen"
   | "input"
   | "table"

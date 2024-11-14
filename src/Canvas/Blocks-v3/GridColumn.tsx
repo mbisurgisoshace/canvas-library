@@ -38,7 +38,7 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
       style={{
         gridColumn: `span ${colSpan}`,
       }}
-      className={`flex-1 ${isOver ? "bg-red-500/20" : ""}`}
+      className={`items-center flex-1 ${isOver ? "bg-red-500/20" : ""}`}
     >
       {children.length > 0 && <Block canvasObject={children[0]} />}
     </div>
