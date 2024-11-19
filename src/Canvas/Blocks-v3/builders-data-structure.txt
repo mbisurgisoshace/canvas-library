@@ -1,0 +1,36 @@
+UI Builder Model
+
+DB Builder Model
+
+* tables - array
+    * table_name
+    * columns - array 
+        * column_name
+        * column_type
+        * is_index
+        * is_primary_key
+        * is_foreign_key 
+            * primary_table
+            * cascading_rules
+    * data - array !!(should this be part of the table object, or another data structure will be used)!!
+        * column_key
+        * value
+       
+API Builder Model
+
+* apis - array
+    !!(what happens with api calls that require more than one query or db calls to be fulfilled)!!
+    * api_id
+    * api_name
+    * api_route
+    * query
+        !!(what happens with queries that are joins with multiple tables)!!
+        * table_name
+        * selected_columns
+        * where_clause - object
+            * column
+            * value
+        * order_by - object
+            * column
+            * order
+        

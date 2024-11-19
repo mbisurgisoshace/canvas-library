@@ -53,7 +53,7 @@ export default function Button({ canvasObject }: ButtonProps) {
       }}
     >
       <button
-        className="w-full"
+        className="p-1 w-full"
         style={{
           border: `1px solid ${
             selectedElement?.elementId === id ? "#0984e3" : "transparent"

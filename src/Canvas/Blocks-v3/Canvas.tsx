@@ -1,6 +1,6 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
-import { BlocksIcon } from "lucide-react";
+import { BlocksIcon, ChevronDown } from "lucide-react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
@@ -56,6 +56,47 @@ const UI_BLOCKS = [
       >
         Button
       </button>
+    ),
+  },
+  {
+    id: "ui-label",
+    uiComponent: (
+      <div className="h-8 text-base font-semibold flex items-center justify-between rounded-md  w-full border-slate-700 p-0 px-2 hover:border-slate-700">
+        Label
+      </div>
+    ),
+  },
+  {
+    id: "ui-header",
+    uiComponent: (
+      <div className="h-8 text-lg font-bold flex items-center justify-between rounded-md  w-full border-slate-700 p-0 px-2 hover:border-slate-700">
+        Header
+      </div>
+    ),
+  },
+  {
+    id: "ui-select",
+    uiComponent: (
+      <div className="h-8 flex items-center justify-between rounded-md border w-full border-slate-700 p-0 px-2 hover:border-slate-700">
+        Select...
+        <ChevronDown />
+      </div>
+    ),
+  },
+  {
+    id: "ui-table",
+    uiComponent: (
+      <div className="rounded-md border w-full border-slate-700 hover:border-slate-700 grid grid-cols-3">
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+        <div className="h-5 border border-slate-700"></div>
+      </div>
     ),
   },
 ];

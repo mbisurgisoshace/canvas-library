@@ -47,6 +47,7 @@ export interface CanvasObject {
     data: string[][];
     columns: string[];
   };
+  title?: string;
 }
 
 /**

@@ -7,8 +7,18 @@ import { useCanvas } from "./CanvasContext";
 interface ScreenProps extends BlockProps {}
 
 export default function Screen({ canvasObject }: ScreenProps) {
-  const { id, x, y, width, height, children, parentId, blockType, layout } =
-    canvasObject;
+  const {
+    id,
+    x,
+    y,
+    width,
+    height,
+    children,
+    parentId,
+    blockType,
+    layout,
+    title,
+  } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
@@ -41,7 +51,7 @@ export default function Screen({ canvasObject }: ScreenProps) {
         //padding: 10,
         position: "absolute",
         backgroundColor: "white",
-        zIndex: isDragging ? 100 : "",
+        zIndex: isDragging ? 100 : -10,
         border: `1px solid ${
           selectedElement?.elementId === id ? "#0984e3" : "black"
         }`,
@@ -67,6 +77,7 @@ export default function Screen({ canvasObject }: ScreenProps) {
         }
       }}
     >
+      <span className="absolute top-[-25px]">{title}</span>
       {(children as CanvasObject[]).map((canvasObj) => (
         <Block key={canvasObj.id} canvasObject={canvasObj} />
       ))}

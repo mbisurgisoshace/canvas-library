@@ -250,10 +250,10 @@ export default function CanvasProvider(props: {
   //     console.log("id", id);
   //     console.log("overId", overId);
 
-  //     // if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
-  //     //   addElement(id, overId, event);
-  //     //   return;
-  //     // }
+  // if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
+  //   addElement(id, overId, event);
+  //   return;
+  // }
 
   //     // const element = elements.find((element) => element.id === id);
 
@@ -402,12 +402,17 @@ export default function CanvasProvider(props: {
   );
 
   console.log("elements", elements);
+  console.log("element stringify", JSON.stringify(elements));
 
   const createBlock = (uiBlockId: string): CanvasObject => {
     let blockType: BlockType = "block";
 
     if (uiBlockId === "ui-input") blockType = "input";
     if (uiBlockId === "ui-button") blockType = "button";
+    if (uiBlockId === "ui-label") blockType = "label";
+    if (uiBlockId === "ui-header") blockType = "header";
+    if (uiBlockId === "ui-select") blockType = "select";
+    if (uiBlockId === "ui-table") blockType = "table";
 
     const newBlock: CanvasObject = {
       id: `block-${uuidv4()}`,
