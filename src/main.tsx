@@ -16,6 +16,7 @@ const router = createBrowserRouter([
   { path: "/impl1", element: <App1 /> },
   { path: "/impl2", element: <App2 /> },
   { path: "/impl3", element: <App3 /> },
+  { path: "/db-builder", element: <App3 /> },
 ]);
 
 createRoot(document.getElementById("root")!).render(
