@@ -23,6 +23,9 @@ API Builder Model
     * api_id
     * api_name
     * api_route
+    * api_method
+    * api_params
+    * api_response_type
     * query
         !!(what happens with queries that are joins with multiple tables)!!
         * table_name
