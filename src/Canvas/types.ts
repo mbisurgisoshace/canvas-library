@@ -48,6 +48,8 @@ export interface CanvasObject {
     columns: string[];
   };
   title?: string;
+  tableName?: string;
+  columns?: { columnName: string; type: string }[];
 }
 
 /**

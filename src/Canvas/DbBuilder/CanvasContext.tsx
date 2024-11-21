@@ -13,6 +13,8 @@ type CanvasContextType = {
   unselectElement: () => void;
   selectedElement: SelectedElement | null;
   onDragEnd: (event: DragEndEvent) => void;
+  changeTableName: (tableName: string, blockId: string) => void;
+  addTableColumn: (blockId: string, columnName: string, type: string) => void;
   setLayout: (elementId: string, layout: "free" | "grid") => void;
   selectElement: (selectedElement: SelectedElement) => void;
   onResizing: (
@@ -96,134 +98,26 @@ export default function CanvasProvider(props: {
     [elements, selectedElement, currentResizeDelta]
   );
 
-  const addElement = useCallback(
-    (
-      droppedElementId: UniqueIdentifier,
-      droppableElementId: UniqueIdentifier,
-      event: DragEndEvent
-    ) => {
-      const { active, over } = event;
+  const changeTableName = (tableName: string, blockId: string) => {
+    const block = elements.find((element) => element.id === blockId);
+    if (!block) return;
 
-      let newBlock: CanvasObject;
+    block.tableName = tableName;
+    setElements([...elements]);
+  };
 
-      const droppableElement = elements.find(
-        (element) => element.id === droppableElementId
-      )!;
+  const addTableColumn = (
+    blockId: string,
+    columnName: string,
+    type: string
+  ) => {
+    const block = elements.find((element) => element.id === blockId);
+    if (!block) return;
 
-      const containerRect = document
-        .getElementById(droppableElementId as string)
-        ?.getBoundingClientRect();
+    block.columns?.push({ columnName, type });
+    setElements([...elements]);
+  };
 
-      const draggableRect = active.rect.current.translated;
-      const { x: clientX, y: clientY } = event.delta;
-
-      const newX = draggableRect!.left - containerRect!.left;
-      const newY = draggableRect!.top - containerRect!.top;
-
-      if (droppedElementId === "input") {
-        newBlock = {
-          id: uuidv4(),
-          x: newX,
-          y: newY,
-          width: 150,
-          height: 32,
-          children: [],
-          blockType: "input",
-        };
-      }
-
-      if (droppedElementId === "button") {
-        newBlock = {
-          id: uuidv4(),
-          x: newX,
-          y: newY,
-          width: 150,
-          height: 32,
-          children: [],
-          blockType: "button",
-        };
-      }
-
-      droppableElement.children.push({
-        ...newBlock!,
-        parentId: droppableElement.id,
-      });
-      setElements([...elements]);
-    },
-    [elements]
-  );
-
-  const groupElement = useCallback(
-    (
-      droppedElementId: UniqueIdentifier,
-      droppableElementId: UniqueIdentifier,
-      event: DragEndEvent
-    ) => {
-      const { active, over } = event;
-      const droppableElement = elements.find(
-        (element) => element.id === droppableElementId
-      )!;
-      const droppedElementIdx = elements.findIndex(
-        (element) => element.id === droppedElementId
-      );
-      const element = elements.find(
-        (element) => element.id === droppedElementId
-      )!;
-      elements.splice(droppedElementIdx, 1);
-
-      const containerRect = document
-        .getElementById(droppableElementId as string)
-        ?.getBoundingClientRect();
-
-      const draggableRect = active.rect.current.translated;
-      const { x: clientX, y: clientY } = event.delta;
-
-      // // const clientX = event.activatorEvent.clientX;
-      // // const clientY = event.activatorEvent.clientY;
-
-      // const localY = clientY - element.y;
-      // const localX = clientX - element.x;
-
-      const newX = draggableRect!.left - containerRect!.left;
-      const newY = draggableRect!.top - containerRect!.top;
-
-      droppableElement.children.push({
-        ...element,
-        // x: localX,
-        // y: localY,
-        y: newY,
-        x: newX,
-        parentId: droppableElement.id,
-      });
-      setElements([...elements]);
-    },
-    [elements]
-  );
-
-  const dragWithinParent = useCallback(
-    (
-      draggableElementId: UniqueIdentifier,
-      parentId: string,
-      x: number,
-      y: number
-    ) => {
-      const parentElement = elements.find(
-        (element) => element.id === parentId
-      )!;
-
-      parentElement.children = parentElement.children.map((child) =>
-        child.id === draggableElementId
-          ? {
-              ...child,
-              x: child.x + x,
-              y: child.y + y,
-            }
-          : child
-      );
-      setElements([...elements]);
-    },
-    [elements]
-  );
   /**
   * pageX 680.5518188476562
     pageY 325.4104919433594
@@ -308,88 +202,16 @@ export default function CanvasProvider(props: {
     (event: DragEndEvent) => {
       const id = event.active.id;
       const overId = event.over?.id;
+      console.log("id", id);
+      console.log("overId", overId);
 
-      if (!id.toString().includes("screen-") && overId !== "canvas") {
-        const column = document.getElementById(overId as string);
-
-        if (column) {
-          const row = column.parentElement as HTMLDivElement;
-
-          if (row) {
-            const screen = row.parentElement as HTMLDivElement;
-
-            if (screen) {
-              const colId = overId;
-              const rowId = row.id;
-              const screenId = screen.id;
-
-              const screenBlock = elements.find(
-                (element) => element.id === screenId
-              );
-              const rowBlock = screenBlock?.children.find(
-                (element) => element.id === rowId
-              );
-              const columnBlock = rowBlock?.children.find(
-                (element) => element.id === colId
-              );
-
-              if (columnBlock?.children.length) {
-                return;
-              }
-
-              if (id.toString().includes("block-")) {
-                // It is an element already on the screen
-                const element = document.getElementById(id.toString())!;
-                const currentColumn = element.parentElement as HTMLDivElement;
-                const currentRow =
-                  currentColumn?.parentElement as HTMLDivElement;
-                const currentScreen =
-                  currentRow?.parentElement as HTMLDivElement;
-
-                if (currentScreen && currentRow && currentColumn) {
-                  const currentRowId = currentRow.id;
-                  const currentColId = currentColumn.id;
-                  const currentScreenId = currentScreen.id;
-
-                  const currentScreenBlock = elements.find(
-                    (element) => element.id === currentScreenId
-                  );
-
-                  const currentRowBlock = currentScreenBlock?.children.find(
-                    (element) => element.id === currentRowId
-                  );
-
-                  const currentColumnBlock = currentRowBlock?.children.find(
-                    (element) => element.id === currentColId
-                  );
-
-                  if (currentColumnBlock) {
-                    const elementBlock = currentColumnBlock?.children.find(
-                      (element) => element.id === id.toString()
-                    );
-                    currentColumnBlock.children =
-                      currentColumnBlock?.children.filter(
-                        (element) => element.id !== id.toString()
-                      );
-
-                    columnBlock?.children.push(elementBlock!);
-                  }
-                }
-              } else if (id.toString().includes("ui-")) {
-                // Create a new element on the screen
-                const newBlock = createBlock(id.toString());
-                columnBlock?.children.push(newBlock);
-              }
-
-              setElements([...elements]);
-            }
-          }
-        }
-
-        return;
+      if (!id.toString().includes("table-") && overId === "canvas") {
+        const newBlock = createBlock(id.toString());
+        elements.push(newBlock);
+        setElements([...elements]);
       }
 
-      if (id.toString().includes("screen-")) {
+      if (id.toString().includes("table-")) {
         const screen = elements.find((element) => element.id === id)!;
         screen.x += event.delta.x;
         screen.y += event.delta.y;
@@ -401,9 +223,6 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
-  console.log("elements", elements);
-  console.log("element stringify", JSON.stringify(elements));
-
   const createBlock = (uiBlockId: string): CanvasObject => {
     let blockType: BlockType = "block";
 
@@ -412,16 +231,18 @@ export default function CanvasProvider(props: {
     if (uiBlockId === "ui-label") blockType = "label";
     if (uiBlockId === "ui-header") blockType = "header";
     if (uiBlockId === "ui-select") blockType = "select";
-    if (uiBlockId === "ui-table") blockType = "table";
+    if (uiBlockId === "db-table") blockType = "table";
 
     const newBlock: CanvasObject = {
-      id: `block-${uuidv4()}`,
-      x: 0,
-      y: 0,
+      id: `table-${uuidv4()}`,
+      x: 250,
+      y: 250,
       width: 150,
       height: 32,
       children: [],
       blockType,
+      columns: [],
+      tableName: "New Table",
     };
 
     return newBlock;
@@ -477,8 +298,10 @@ export default function CanvasProvider(props: {
     onResizeStop,
     onResizeStart,
     selectElement,
+    addTableColumn,
     selectedElement,
     unselectElement,
+    changeTableName,
   };
 
   return (

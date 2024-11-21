@@ -38,53 +38,7 @@ type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
 
 const UI_BLOCKS = [
   {
-    id: "ui-input",
-    uiComponent: (
-      <input
-        className="border border-slate-700 h-8 rounded-md px-2 w-full"
-        placeholder="Input"
-        disabled
-      />
-    ),
-  },
-  {
-    id: "ui-button",
-    uiComponent: (
-      <button
-        disabled
-        className="h-8 rounded-md border w-full border-slate-700 p-0 px-2 hover:border-slate-700"
-      >
-        Button
-      </button>
-    ),
-  },
-  {
-    id: "ui-label",
-    uiComponent: (
-      <div className="h-8 text-base font-semibold flex items-center justify-between rounded-md  w-full border-slate-700 p-0 px-2 hover:border-slate-700">
-        Label
-      </div>
-    ),
-  },
-  {
-    id: "ui-header",
-    uiComponent: (
-      <div className="h-8 text-lg font-bold flex items-center justify-between rounded-md  w-full border-slate-700 p-0 px-2 hover:border-slate-700">
-        Header
-      </div>
-    ),
-  },
-  {
-    id: "ui-select",
-    uiComponent: (
-      <div className="h-8 flex items-center justify-between rounded-md border w-full border-slate-700 p-0 px-2 hover:border-slate-700">
-        Select...
-        <ChevronDown />
-      </div>
-    ),
-  },
-  {
-    id: "ui-table",
+    id: "db-table",
     uiComponent: (
       <div className="rounded-md border w-full border-slate-700 hover:border-slate-700 grid grid-cols-3">
         <div className="h-5 border border-slate-700"></div>
@@ -197,18 +151,6 @@ export default function CanvasModule(props: CanvasProps) {
         </div>
       </div>
 
-      <FeaturesTable
-        features={[
-          { name: "Dragging to individual cells", isWorking: true },
-          { name: "Column span", isWorking: true },
-          { name: "Not allowing 2 elements on the same cell", isWorking: true },
-          {
-            name: "Allow editing inputs",
-            isWorking: false,
-          },
-        ]}
-      />
-
       <Droppable
         id="canvas"
         style={{
@@ -237,9 +179,6 @@ export default function CanvasModule(props: CanvasProps) {
               transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
             }}
           >
-            {/* {elements.map((element) => (
-              <Draggable key={element.id} canvasObject={element} />
-            ))} */}
             {elements.map((element) => (
               <Block key={element.id} canvasObject={element} />
             ))}
