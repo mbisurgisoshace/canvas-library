@@ -149,6 +149,23 @@ export default function CanvasModule(props: CanvasProps) {
             />
           ))}
         </div>
+
+        <button
+          className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
+          onClick={async () => {
+            const json = JSON.stringify(elements);
+            const blob = new Blob([json], { type: "application/json" });
+            const href = await URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = href;
+            link.download = "db-builder-model.json";
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+          }}
+        >
+          Export to JSON
+        </button>
       </div>
 
       <Droppable
