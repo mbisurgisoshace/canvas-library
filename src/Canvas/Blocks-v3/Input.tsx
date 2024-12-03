@@ -18,9 +18,10 @@ export default function Input({ canvasObject }: InputProps) {
     layout,
     colSpan,
     placeholder,
+    style,
   } = canvasObject;
 
-  const { selectElement, selectedElement } = useCanvas();
+  const { selectElement, selectedElement, isChangingStyle } = useCanvas();
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -56,9 +57,15 @@ export default function Input({ canvasObject }: InputProps) {
         placeholder={placeholder || "Input"}
         className="input border border-slate-700 h-8 rounded-md px-2 w-full"
         style={{
-          border: `1px solid ${
-            selectedElement?.elementId === id ? "#0984e3" : "black"
-          }`,
+          // border: `1px solid ${
+          //   selectedElement?.elementId === id ? "#0984e3" : "black"
+          // }`,
+          borderWidth: 1,
+          borderColor:
+            selectedElement?.elementId === id && !isChangingStyle
+              ? "#0984e3"
+              : style?.borderColor || "black",
+          borderStyle: style?.borderStyle || "solid",
         }}
       />
       {/* <div className="border border-slate-700 h-8 rounded-md px-2 w-full flex items-center">

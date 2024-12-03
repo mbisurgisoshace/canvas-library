@@ -50,6 +50,7 @@ export interface CanvasObject {
   title?: string;
   tableName?: string;
   columns?: { columnName: string; type: string }[];
+  style?: any;
 }
 
 /**

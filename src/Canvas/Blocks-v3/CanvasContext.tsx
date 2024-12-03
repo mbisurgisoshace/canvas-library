@@ -1,6 +1,12 @@
 import { v4 as uuidv4 } from "uuid";
 import { NumberSize } from "re-resizable";
-import { useContext, createContext, useState, useCallback } from "react";
+import {
+  useContext,
+  createContext,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
 
 import { BlockType, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
@@ -32,6 +38,9 @@ type CanvasContextType = {
       | React.MouseEvent<HTMLElement, MouseEvent>
       | React.TouchEvent<HTMLElement>
   ) => void;
+  isChangingStyle: boolean;
+  selectedNode: CanvasObject | undefined;
+  changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
 
 const CanvasContext = createContext<CanvasContextType>(null!);
@@ -46,6 +55,7 @@ export default function CanvasProvider(props: {
 }) {
   const { children } = props;
 
+  const [isChangingStyle, setIsChangingStyle] = useState(false);
   const [selectedElement, selectElement] = useState<SelectedElement | null>(
     null
   );
@@ -94,6 +104,60 @@ export default function CanvasProvider(props: {
       }
     },
     [elements, selectedElement, currentResizeDelta]
+  );
+
+  const selectedNode = useMemo(() => {
+    if (!selectedElement) return;
+    let element: CanvasObject | undefined;
+
+    for (let i = 0; i < elements.length; i++) {
+      const screen = elements[i];
+      screen.children.forEach((row) => {
+        row.children.forEach((col) => {
+          col.children.forEach((block) => {
+            if (block.id === selectedElement?.elementId) {
+              element = block;
+            }
+          });
+        });
+      });
+    }
+
+    return element;
+  }, [elements, selectedElement]);
+
+  const changeStyle = useCallback(
+    (styleProp: string, stylePropValue: string) => {
+      let element: CanvasObject | undefined;
+      setIsChangingStyle(true);
+
+      setTimeout(() => {
+        setIsChangingStyle(false!);
+      }, 1500);
+
+      for (let i = 0; i < elements.length; i++) {
+        const screen = elements[i];
+        screen.children.forEach((row) => {
+          row.children.forEach((col) => {
+            col.children.forEach((block) => {
+              if (block.id === selectedElement?.elementId) {
+                element = block;
+              }
+            });
+          });
+        });
+      }
+
+      if (element) {
+        element.style = {
+          ...element.style,
+          [styleProp]: stylePropValue,
+        };
+
+        setElements([...elements]);
+      }
+    },
+    [elements, selectedElement]
   );
 
   const addElement = useCallback(
@@ -401,9 +465,6 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
-  console.log("elements", elements);
-  console.log("element stringify", JSON.stringify(elements));
-
   const createBlock = (uiBlockId: string): CanvasObject => {
     let blockType: BlockType = "block";
 
@@ -474,9 +535,12 @@ export default function CanvasProvider(props: {
     onDragEnd,
     setLayout,
     onResizing,
+    changeStyle,
+    selectedNode,
     onResizeStop,
     onResizeStart,
     selectElement,
+    isChangingStyle,
     selectedElement,
     unselectElement,
   };

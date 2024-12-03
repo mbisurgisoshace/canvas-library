@@ -21,6 +21,15 @@ import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { DraggableUiElement } from "../DraggableUiElement";
 import Block from "./Block";
 import { FeaturesTable } from "../FeaturesTable";
+import StylingSidebar from "./StylingSidebar";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -112,7 +121,7 @@ export default function CanvasModule(props: CanvasProps) {
   } = props;
 
   const [active, setActive] = useState<any>(null);
-  const { elements, onDragEnd, unselectElement } = useCanvas();
+  const { elements, onDragEnd, unselectElement, selectedElement } = useCanvas();
 
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
@@ -196,6 +205,35 @@ export default function CanvasModule(props: CanvasProps) {
           ))}
         </div>
 
+        <Dialog>
+          <DialogTrigger className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full">
+            Features
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Features implemented</DialogTitle>
+              <DialogDescription>
+                This are the features trying to be accomplished with the status
+                of working or not.
+              </DialogDescription>
+            </DialogHeader>
+            <FeaturesTable
+              features={[
+                { name: "Dragging to individual cells", isWorking: true },
+                { name: "Column span", isWorking: true },
+                {
+                  name: "Not allowing 2 elements on the same cell",
+                  isWorking: true,
+                },
+                {
+                  name: "Allow editing inputs",
+                  isWorking: false,
+                },
+              ]}
+            />
+          </DialogContent>
+        </Dialog>
+
         <button
           className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
           onClick={async () => {
@@ -212,19 +250,9 @@ export default function CanvasModule(props: CanvasProps) {
         >
           Export to JSON
         </button>
-      </div>
 
-      <FeaturesTable
-        features={[
-          { name: "Dragging to individual cells", isWorking: true },
-          { name: "Column span", isWorking: true },
-          { name: "Not allowing 2 elements on the same cell", isWorking: true },
-          {
-            name: "Allow editing inputs",
-            isWorking: false,
-          },
-        ]}
-      />
+        {selectedElement && <StylingSidebar />}
+      </div>
 
       <Droppable
         id="canvas"
