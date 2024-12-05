@@ -40,6 +40,11 @@ type CanvasContextType = {
   ) => void;
   isChangingStyle: boolean;
   selectedNode: CanvasObject | undefined;
+  newRowData: { screenId: string } | undefined;
+  setNewRowData: (data: { screenId: string } | undefined) => void;
+  rowLayout: string;
+  setRowLayout: (layout: string) => void;
+  onCreateRow: () => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
 
@@ -64,6 +69,10 @@ export default function CanvasProvider(props: {
     y: 0,
   });
   const [elements, setElements] = useState<CanvasObject[]>(props.elements);
+  const [newRowData, setNewRowData] = useState<
+    { screenId: string } | undefined
+  >();
+  const [rowLayout, setRowLayout] = useState<string | undefined>("");
 
   const unselectElement = () => selectElement(null);
 
@@ -373,7 +382,18 @@ export default function CanvasProvider(props: {
       const id = event.active.id;
       const overId = event.over?.id;
 
+      if (id === "ui-screen" && overId === "canvas") {
+        const newScreen = createScreen();
+        elements.push(newScreen);
+        setElements([...elements]);
+      }
+
       if (!id.toString().includes("screen-") && overId !== "canvas") {
+        if (id === "ui-row") {
+          setNewRowData({ screenId: overId as string });
+          return;
+        }
+
         const column = document.getElementById(overId as string);
 
         if (column) {
@@ -488,6 +508,19 @@ export default function CanvasProvider(props: {
     return newBlock;
   };
 
+  const createScreen = (): CanvasObject => {
+    return {
+      id: `screen-${uuidv4()}`,
+      x: 250,
+      y: 100,
+      width: 400,
+      height: 750,
+      title: "New Screen",
+      children: [],
+      blockType: "screen",
+    };
+  };
+
   const onResizing = (
     event: MouseEvent | TouchEvent,
     direction: Direction,
@@ -530,14 +563,159 @@ export default function CanvasProvider(props: {
     setElements([...elements]);
   };
 
+  const onCreateRow = () => {
+    console.log("rowLayout", rowLayout);
+    console.log("newRowData", newRowData);
+    const newRow: CanvasObject = {
+      blockType: "grid-row",
+      id: `grid-row-${uuidv4()}`,
+      x: 0,
+      y: 0,
+      width: 400,
+      height: 75,
+      colNumber: 6,
+      children: createColumnsLayout(rowLayout!),
+    };
+
+    const screen = elements.find(
+      (element) => element.id === newRowData?.screenId
+    );
+
+    if (screen) {
+      screen.children.push(newRow);
+      setElements([...elements]);
+    }
+
+    setRowLayout(undefined);
+    setNewRowData(undefined);
+  };
+
+  const createColumnsLayout = (rowLayout: string): CanvasObject[] => {
+    const cols: CanvasObject[] = [];
+
+    if (rowLayout === "2-4") {
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 4,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    if (rowLayout === "3-3") {
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 3,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 3,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    if (rowLayout === "4-2") {
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 4,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    if (rowLayout === "2-2-2") {
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        colSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    return cols;
+  };
+
   const value = {
     elements,
     onDragEnd,
+    rowLayout,
     setLayout,
+    newRowData,
     onResizing,
+    onCreateRow,
     changeStyle,
+    setRowLayout,
     selectedNode,
     onResizeStop,
+    setNewRowData,
     onResizeStart,
     selectElement,
     isChangingStyle,

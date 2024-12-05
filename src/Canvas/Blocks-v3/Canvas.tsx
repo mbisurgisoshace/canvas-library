@@ -26,10 +26,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -44,6 +48,25 @@ interface CanvasDefaultProps {
 type ZoomEvent = { transform: Transform; sourceEvent: React.MouseEvent };
 type Transform = { x: number; y: number; k: number };
 type CanvasProps = CanvasDefaultProps & (FullSizeCanvas | CustomSizeCanvas);
+
+const LAYOUT_BLOCKS = [
+  {
+    id: "ui-screen",
+    uiComponent: (
+      <div className="border border-slate-700 h-28 w-20 flex items-center justify-center">
+        Screen
+      </div>
+    ),
+  },
+  {
+    id: "ui-row",
+    uiComponent: (
+      <div className="border border-slate-700 h-10 w-full flex items-center justify-center">
+        Row
+      </div>
+    ),
+  },
+];
 
 const UI_BLOCKS = [
   {
@@ -121,7 +144,17 @@ export default function CanvasModule(props: CanvasProps) {
   } = props;
 
   const [active, setActive] = useState<any>(null);
-  const { elements, onDragEnd, unselectElement, selectedElement } = useCanvas();
+  const {
+    elements,
+    onDragEnd,
+    rowLayout,
+    newRowData,
+    onCreateRow,
+    setRowLayout,
+    setNewRowData,
+    unselectElement,
+    selectedElement,
+  } = useCanvas();
 
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
@@ -191,6 +224,23 @@ export default function CanvasModule(props: CanvasProps) {
     >
       <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
         <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
+          Layout Elements
+          <BlocksIcon />
+        </h3>
+
+        <div className="mt-3 flex flex-col gap-5">
+          {LAYOUT_BLOCKS.map((block) => (
+            <DraggableUiElement
+              key={block.id}
+              id={block.id}
+              uiComponent={block.uiComponent}
+            />
+          ))}
+        </div>
+
+        <div className="h-[1px] w-full bg-slate-300 my-3" />
+
+        <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
           UI Elements
           <BlocksIcon />
         </h3>
@@ -204,6 +254,12 @@ export default function CanvasModule(props: CanvasProps) {
             />
           ))}
         </div>
+
+        <div className="h-[1px] w-full bg-slate-300 my-3" />
+
+        {selectedElement && <StylingSidebar />}
+
+        <div className="h-[1px] w-full bg-slate-300 my-3" />
 
         <Dialog>
           <DialogTrigger className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full">
@@ -234,6 +290,73 @@ export default function CanvasModule(props: CanvasProps) {
           </DialogContent>
         </Dialog>
 
+        <Dialog
+          open={!!newRowData}
+          onOpenChange={() => {
+            setRowLayout("");
+            setNewRowData(undefined);
+          }}
+        >
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Create a new row</DialogTitle>
+              <DialogDescription>
+                Choose your columns layout for this row.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="2-4"
+                  className="flex items-center space-x-2"
+                  value="2-4"
+                  checked={rowLayout === "2-4"}
+                  onChange={(e) => setRowLayout(e.target.value)}
+                />
+                <Label>2-4</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="3-3"
+                  className="flex items-center space-x-2"
+                  value="3-3"
+                  checked={rowLayout === "3-3"}
+                  onChange={(e) => setRowLayout(e.target.value)}
+                />
+                <Label>3-3</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="4-2"
+                  className="flex items-center space-x-2"
+                  value="4-2"
+                  checked={rowLayout === "4-2"}
+                  onChange={(e) => setRowLayout(e.target.value)}
+                />
+                <Label>4-2</Label>
+              </div>
+              <div className="flex items-center space-x-2">
+                <input
+                  type="radio"
+                  id="2-2-2"
+                  value="2-2-2"
+                  checked={rowLayout === "2-2-2"}
+                  onChange={(e) => setRowLayout(e.target.value)}
+                />
+                <Label>2-2-2</Label>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button disabled={!rowLayout} onClick={onCreateRow}>
+                Create
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <button
           className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
           onClick={async () => {
@@ -250,8 +373,6 @@ export default function CanvasModule(props: CanvasProps) {
         >
           Export to JSON
         </button>
-
-        {selectedElement && <StylingSidebar />}
       </div>
 
       <Droppable
