@@ -156,6 +156,7 @@ export default function CanvasModule(props: CanvasProps) {
     selectedElement,
   } = useCanvas();
 
+  const [toggleGrid, setToggleGrid] = useState(false);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
   const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
@@ -202,6 +203,21 @@ export default function CanvasModule(props: CanvasProps) {
     );
   };
 
+  useEffect(() => {
+    const rows = document.querySelectorAll(".row");
+    const columns = document.querySelectorAll(".column");
+
+    if (toggleGrid) {
+      columns.forEach((col) => {
+        col.classList.add("bg-red-200");
+      });
+    } else {
+      columns.forEach((col) => {
+        col.classList.remove("bg-red-200");
+      });
+    }
+  }, [toggleGrid]);
+
   /**
    * Rendering will changed based on the base prop.
    *    - web-div: Render the canvas using a div element
@@ -222,11 +238,20 @@ export default function CanvasModule(props: CanvasProps) {
         active && active.data.current ? active.data.current.modifiers : []
       }
     >
-      <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
+      <div className="absolute overflow-scroll z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
         <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
           Layout Elements
           <BlocksIcon />
         </h3>
+
+        <div className="flex flex-row gap-2">
+          <label className="mr-2">Toggle Grid</label>
+          <input
+            type="checkbox"
+            checked={toggleGrid}
+            onChange={() => setToggleGrid(!toggleGrid)}
+          />
+        </div>
 
         <div className="mt-3 flex flex-col gap-5">
           {LAYOUT_BLOCKS.map((block) => (

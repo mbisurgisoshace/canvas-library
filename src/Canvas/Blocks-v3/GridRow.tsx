@@ -29,7 +29,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
         alignContent: "stretch",
         gridTemplateColumns: `repeat(${colNumber}, 1fr)`,
       }}
-      className={`grid gap-1 relative p-2 content-start`}
+      className={`grid gap-1 relative p-2 content-start row`}
     >
       {(children as CanvasObject[]).map((canvasObj) => (
         <Block key={canvasObj.id} canvasObject={canvasObj} />
