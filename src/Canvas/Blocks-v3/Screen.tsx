@@ -51,7 +51,7 @@ export default function Screen({ canvasObject }: ScreenProps) {
         //padding: 10,
         position: "absolute",
         backgroundColor: "white",
-        zIndex: isDragging ? 100 : -10,
+        zIndex: isDragging ? 9999 : -10,
         border: `1px solid ${
           selectedElement?.elementId === id ? "#0984e3" : "black"
         }`,

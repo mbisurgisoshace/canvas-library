@@ -3,6 +3,7 @@ import { select } from "d3-selection";
 import { BlocksIcon, ChevronDown } from "lucide-react";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
+import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
 
 import "../styles.css";
 
@@ -156,6 +157,7 @@ export default function CanvasModule(props: CanvasProps) {
     selectedElement,
   } = useCanvas();
 
+  const updateXarrow = useXarrow();
   const [toggleGrid, setToggleGrid] = useState(false);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
@@ -225,10 +227,12 @@ export default function CanvasModule(props: CanvasProps) {
    */
   return (
     <DndContext
+      onDragMove={updateXarrow}
       onDragEnd={(e) => {
         setActive(null);
 
         onDragEnd(e);
+        updateXarrow();
       }}
       onDragStart={(data) => {
         const { active } = data;
@@ -238,205 +242,213 @@ export default function CanvasModule(props: CanvasProps) {
         active && active.data.current ? active.data.current.modifiers : []
       }
     >
-      <div className="absolute overflow-scroll z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
-        <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
-          Layout Elements
-          <BlocksIcon />
-        </h3>
+      <Xwrapper>
+        <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
+          <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
+            Layout Elements
+            <BlocksIcon />
+          </h3>
 
-        <div className="flex flex-row gap-2">
-          <label className="mr-2">Toggle Grid</label>
-          <input
-            type="checkbox"
-            checked={toggleGrid}
-            onChange={() => setToggleGrid(!toggleGrid)}
-          />
+          <div className="flex flex-row gap-2">
+            <label className="mr-2">Toggle Grid</label>
+            <input
+              type="checkbox"
+              checked={toggleGrid}
+              onChange={() => setToggleGrid(!toggleGrid)}
+            />
+          </div>
+
+          <div className="mt-3 flex flex-col gap-5">
+            {LAYOUT_BLOCKS.map((block) => (
+              <DraggableUiElement
+                key={block.id}
+                id={block.id}
+                uiComponent={block.uiComponent}
+              />
+            ))}
+          </div>
+
+          <div className="h-[1px] w-full bg-slate-300 my-3" />
+
+          <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
+            UI Elements
+            <BlocksIcon />
+          </h3>
+
+          <div className="mt-3 flex flex-col gap-5">
+            {UI_BLOCKS.map((block) => (
+              <DraggableUiElement
+                key={block.id}
+                id={block.id}
+                uiComponent={block.uiComponent}
+              />
+            ))}
+          </div>
+
+          <div className="h-[1px] w-full bg-slate-300 my-3" />
+
+          {selectedElement && <StylingSidebar />}
+
+          <div className="h-[1px] w-full bg-slate-300 my-3" />
+
+          <Dialog>
+            <DialogTrigger className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full">
+              Features
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Features implemented</DialogTitle>
+                <DialogDescription>
+                  This are the features trying to be accomplished with the
+                  status of working or not.
+                </DialogDescription>
+              </DialogHeader>
+              <FeaturesTable
+                features={[
+                  { name: "Dragging to individual cells", isWorking: true },
+                  { name: "Column span", isWorking: true },
+                  {
+                    name: "Not allowing 2 elements on the same cell",
+                    isWorking: true,
+                  },
+                  {
+                    name: "Allow editing inputs",
+                    isWorking: false,
+                  },
+                ]}
+              />
+            </DialogContent>
+          </Dialog>
+
+          <Dialog
+            open={!!newRowData}
+            onOpenChange={() => {
+              setRowLayout("");
+              setNewRowData(undefined);
+            }}
+          >
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create a new row</DialogTitle>
+                <DialogDescription>
+                  Choose your columns layout for this row.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="2-4"
+                    className="flex items-center space-x-2"
+                    value="2-4"
+                    checked={rowLayout === "2-4"}
+                    onChange={(e) => setRowLayout(e.target.value)}
+                  />
+                  <Label>2-4</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="3-3"
+                    className="flex items-center space-x-2"
+                    value="3-3"
+                    checked={rowLayout === "3-3"}
+                    onChange={(e) => setRowLayout(e.target.value)}
+                  />
+                  <Label>3-3</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="4-2"
+                    className="flex items-center space-x-2"
+                    value="4-2"
+                    checked={rowLayout === "4-2"}
+                    onChange={(e) => setRowLayout(e.target.value)}
+                  />
+                  <Label>4-2</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    id="2-2-2"
+                    value="2-2-2"
+                    checked={rowLayout === "2-2-2"}
+                    onChange={(e) => setRowLayout(e.target.value)}
+                  />
+                  <Label>2-2-2</Label>
+                </div>
+              </div>
+              <DialogFooter>
+                <Button disabled={!rowLayout} onClick={onCreateRow}>
+                  Create
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <button
+            className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
+            onClick={async () => {
+              const json = JSON.stringify(elements);
+              const blob = new Blob([json], { type: "application/json" });
+              const href = await URL.createObjectURL(blob);
+              const link = document.createElement("a");
+              link.href = href;
+              link.download = "ui-builder-model.json";
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            }}
+          >
+            Export to JSON
+          </button>
         </div>
 
-        <div className="mt-3 flex flex-col gap-5">
-          {LAYOUT_BLOCKS.map((block) => (
-            <DraggableUiElement
-              key={block.id}
-              id={block.id}
-              uiComponent={block.uiComponent}
-            />
-          ))}
-        </div>
-
-        <div className="h-[1px] w-full bg-slate-300 my-3" />
-
-        <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
-          UI Elements
-          <BlocksIcon />
-        </h3>
-
-        <div className="mt-3 flex flex-col gap-5">
-          {UI_BLOCKS.map((block) => (
-            <DraggableUiElement
-              key={block.id}
-              id={block.id}
-              uiComponent={block.uiComponent}
-            />
-          ))}
-        </div>
-
-        <div className="h-[1px] w-full bg-slate-300 my-3" />
-
-        {selectedElement && <StylingSidebar />}
-
-        <div className="h-[1px] w-full bg-slate-300 my-3" />
-
-        <Dialog>
-          <DialogTrigger className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full">
-            Features
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Features implemented</DialogTitle>
-              <DialogDescription>
-                This are the features trying to be accomplished with the status
-                of working or not.
-              </DialogDescription>
-            </DialogHeader>
-            <FeaturesTable
-              features={[
-                { name: "Dragging to individual cells", isWorking: true },
-                { name: "Column span", isWorking: true },
-                {
-                  name: "Not allowing 2 elements on the same cell",
-                  isWorking: true,
-                },
-                {
-                  name: "Allow editing inputs",
-                  isWorking: false,
-                },
-              ]}
-            />
-          </DialogContent>
-        </Dialog>
-
-        <Dialog
-          open={!!newRowData}
-          onOpenChange={() => {
-            setRowLayout("");
-            setNewRowData(undefined);
-          }}
-        >
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create a new row</DialogTitle>
-              <DialogDescription>
-                Choose your columns layout for this row.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="flex flex-col gap-2">
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="2-4"
-                  className="flex items-center space-x-2"
-                  value="2-4"
-                  checked={rowLayout === "2-4"}
-                  onChange={(e) => setRowLayout(e.target.value)}
-                />
-                <Label>2-4</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="3-3"
-                  className="flex items-center space-x-2"
-                  value="3-3"
-                  checked={rowLayout === "3-3"}
-                  onChange={(e) => setRowLayout(e.target.value)}
-                />
-                <Label>3-3</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="4-2"
-                  className="flex items-center space-x-2"
-                  value="4-2"
-                  checked={rowLayout === "4-2"}
-                  onChange={(e) => setRowLayout(e.target.value)}
-                />
-                <Label>4-2</Label>
-              </div>
-              <div className="flex items-center space-x-2">
-                <input
-                  type="radio"
-                  id="2-2-2"
-                  value="2-2-2"
-                  checked={rowLayout === "2-2-2"}
-                  onChange={(e) => setRowLayout(e.target.value)}
-                />
-                <Label>2-2-2</Label>
-              </div>
-            </div>
-            <DialogFooter>
-              <Button disabled={!rowLayout} onClick={onCreateRow}>
-                Create
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-
-        <button
-          className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
-          onClick={async () => {
-            const json = JSON.stringify(elements);
-            const blob = new Blob([json], { type: "application/json" });
-            const href = await URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.href = href;
-            link.download = "ui-builder-model.json";
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-          }}
-        >
-          Export to JSON
-        </button>
-      </div>
-
-      <Droppable
-        id="canvas"
-        style={{
-          width: canvasWidth,
-          height: canvasHeight,
-        }}
-      >
-        <div
+        <Droppable
+          id="canvas"
           style={{
             width: canvasWidth,
             height: canvasHeight,
           }}
-          className="canvasWrapper"
-          onClick={() => {
-            unselectElement();
-          }}
         >
-          {enableZoom && zoomControls && (
-            <ZoomControl onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
-          )}
           <div
-            className="zoomablePannableArea"
             style={{
               width: canvasWidth,
               height: canvasHeight,
-              transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
+            }}
+            className="canvasWrapper"
+            onClick={() => {
+              unselectElement();
             }}
           >
-            {/* {elements.map((element) => (
+            {enableZoom && zoomControls && (
+              <ZoomControl onZoomIn={onZoomIn} onZoomOut={onZoomOut} />
+            )}
+            <div
+              className="zoomablePannableArea"
+              style={{
+                width: canvasWidth,
+                height: canvasHeight,
+                transform: `translate(${transform.x}px, ${transform.y}px) scale(${transform.k})`,
+              }}
+            >
+              {/* {elements.map((element) => (
               <Draggable key={element.id} canvasObject={element} />
             ))} */}
-            {elements.map((element) => (
-              <Block key={element.id} canvasObject={element} />
-            ))}
+              {elements.map((element) => (
+                <Block key={element.id} canvasObject={element} />
+              ))}
+            </div>
           </div>
-        </div>
-      </Droppable>
+        </Droppable>
+        {elements.length > 1 && (
+          <Xarrow start={elements[0].id} end={elements[1].id} />
+        )}
+        {elements.length > 2 && (
+          <Xarrow start={elements[1].id} end={elements[2].id} />
+        )}
+      </Xwrapper>
     </DndContext>
   );
 }
