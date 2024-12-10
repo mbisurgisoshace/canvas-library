@@ -5,6 +5,11 @@ import {
 } from "react-router-dom";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import {
+  LiveblocksProvider,
+  RoomProvider,
+  ClientSideSuspense,
+} from "@liveblocks/react/suspense";
 import App from "./App.tsx";
 import "./index.css";
 import { App1 } from "./Canvas/Blocks-v1/App1.tsx";
@@ -22,7 +27,17 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <LiveblocksProvider
+      publicApiKey={
+        "pk_dev_lxkCRckCv3Z9yp1Xq1HYJyPSvK3ueAlPItQ7mzaSJ2_yK5uYNFa-k4jna7O7bVHC"
+      }
+    >
+      <RoomProvider id="my-room">
+        <ClientSideSuspense fallback={<div>Loading…</div>}>
+          <RouterProvider router={router} />
+        </ClientSideSuspense>
+      </RoomProvider>
+    </LiveblocksProvider>
     {/* <App /> */}
   </StrictMode>
 );
