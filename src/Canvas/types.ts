@@ -24,7 +24,7 @@ export type BlockType =
   | "checkbox"
   | "grid-row"
   | "grid-column";
-export interface CanvasObject {
+export type CanvasObject = {
   x: number;
   y: number;
   id: string;
@@ -51,7 +51,7 @@ export interface CanvasObject {
   tableName?: string;
   columns?: { columnName: string; type: string }[];
   style?: any;
-}
+};
 
 /**
  * Tools types
