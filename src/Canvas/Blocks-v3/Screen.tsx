@@ -1,3 +1,10 @@
+import {
+  DropdownMenu,
+  DropdownMenuItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { SettingsIcon } from "lucide-react";
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 
 import { CanvasObject } from "../types";
@@ -9,7 +16,7 @@ interface ScreenProps extends BlockProps {}
 export default function Screen({ canvasObject }: ScreenProps) {
   const { id, x, y, width, height, children, parentId, title } = canvasObject;
 
-  const { selectElement, selectedElement } = useCanvas();
+  const { selectElement, selectedElement, duplicateScreen } = useCanvas();
 
   const { setNodeRef: setDroppableRef } = useDroppable({
     id,
@@ -49,11 +56,16 @@ export default function Screen({ canvasObject }: ScreenProps) {
           : undefined,
       }}
       onPointerDown={(e) => {
+        const el = e.target as HTMLElement;
         const isResizeHandle = (
           e.target as HTMLDivElement
         ).offsetParent?.className.includes("resizable");
 
         if (isResizeHandle) {
+          return;
+        }
+
+        if (el.classList.contains("screen-menu")) {
           return;
         }
 
@@ -66,7 +78,23 @@ export default function Screen({ canvasObject }: ScreenProps) {
         }
       }}
     >
-      <span className="absolute top-[-25px]">{title}</span>
+      <span className="absolute flex flex-row gap-2 items-center top-[-25px]">
+        {title}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <SettingsIcon size={18} />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem
+              className="screen-menu"
+              onClick={() => duplicateScreen(canvasObject)}
+            >
+              Duplicate Screen
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </span>
+
       {(children as CanvasObject[]).map((canvasObj) => (
         <Block key={canvasObj.id} canvasObject={canvasObj} />
       ))}

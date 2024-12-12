@@ -45,6 +45,7 @@ type CanvasContextType = {
   rowLayout: string | undefined;
   setRowLayout: (layout: string) => void;
   onCreateRow: () => void;
+  duplicateScreen: (screen: CanvasObject) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
 
@@ -167,6 +168,57 @@ export default function CanvasProvider(props: {
       }
     },
     [elements, selectedElement]
+  );
+
+  const duplicateScreen = useCallback(
+    (screen: CanvasObject) => {
+      const newScreen = {
+        ...screen,
+        x: screen.x + 25,
+        id: `screen-${uuidv4()}`,
+      };
+
+      // newScreen.children.forEach((row) => {
+      //   row.id = `grid-row-${uuidv4()}`;
+      //   row.children.forEach((col) => {
+      //     col.id = `grid-column-${uuidv4()}`;
+      //     col.children.forEach((block) => {
+      //       block.id = `block-${uuidv4()}`;
+      //     });
+      //   });
+      // });
+
+      newScreen.children = newScreen.children.map((row) => {
+        const newRow = {
+          ...row,
+          id: `grid-row-${uuidv4()}`,
+        };
+
+        newRow.children = newRow.children.map((col) => {
+          const newCol = {
+            ...col,
+            id: `grid-column-${uuidv4()}`,
+          };
+
+          newCol.children = newCol.children.map((block) => {
+            const newBlock = {
+              ...block,
+              id: `block-${uuidv4()}`,
+            };
+
+            return newBlock;
+          });
+
+          return newCol;
+        });
+
+        return newRow;
+      });
+
+      elements.push(newScreen);
+      setElements([...elements]);
+    },
+    [elements]
   );
 
   const onDragEnd = useCallback(
@@ -514,6 +566,7 @@ export default function CanvasProvider(props: {
     setNewRowData,
     onResizeStart,
     selectElement,
+    duplicateScreen,
     isChangingStyle,
     selectedElement,
     unselectElement,
