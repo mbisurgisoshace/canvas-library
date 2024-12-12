@@ -1,7 +1,7 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
 import { BlocksIcon } from "lucide-react";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { Active, DndContext } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 
 import "./styles.css";
@@ -13,11 +13,9 @@ import {
   FullSizeCanvas,
   CustomSizeCanvas,
 } from "./types";
-import Draggable from "./Draggable";
 import ZoomControl from "./Tools/ZoomControl";
 import Droppable from "./Droppable";
 import { useCanvas } from "./Features/CanvasContext";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { DraggableUiElement } from "./DraggableUiElement";
 import Block from "./Blocks-v1/Block";
 
@@ -61,15 +59,13 @@ const UI_BLOCKS = [
 
 export default function CanvasModule(props: CanvasProps) {
   const {
-    tools = [],
     minZoom = 1,
     maxZoom = 10,
-    base = "web-div",
     enableZoom = true,
     zoomControls = false,
   } = props;
 
-  const [active, setActive] = useState<any>(null);
+  const [active, setActive] = useState<Active | null>(null);
   const { elements, onDragEnd, unselectElement } = useCanvas();
 
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
