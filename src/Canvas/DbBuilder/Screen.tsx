@@ -7,22 +7,11 @@ import { useCanvas } from "./CanvasContext";
 interface ScreenProps extends BlockProps {}
 
 export default function Screen({ canvasObject }: ScreenProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    title,
-  } = canvasObject;
+  const { id, x, y, width, height, children, parentId, title } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
-  const { isOver, setNodeRef: setDroppableRef } = useDroppable({
+  const { setNodeRef: setDroppableRef } = useDroppable({
     id,
   });
 

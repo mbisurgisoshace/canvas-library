@@ -4,7 +4,7 @@ import { useContext, createContext, useState, useCallback } from "react";
 
 import { BlockType, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
-import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
+import { DragEndEvent } from "@dnd-kit/core";
 
 type SelectedElement = { elementId: string; parentId?: string };
 
@@ -96,191 +96,6 @@ export default function CanvasProvider(props: {
     [elements, selectedElement, currentResizeDelta]
   );
 
-  const addElement = useCallback(
-    (
-      droppedElementId: UniqueIdentifier,
-      droppableElementId: UniqueIdentifier,
-      event: DragEndEvent
-    ) => {
-      const { active, over } = event;
-
-      let newBlock: CanvasObject;
-
-      const droppableElement = elements.find(
-        (element) => element.id === droppableElementId
-      )!;
-
-      const containerRect = document
-        .getElementById(droppableElementId as string)
-        ?.getBoundingClientRect();
-
-      const draggableRect = active.rect.current.translated;
-      const { x: clientX, y: clientY } = event.delta;
-
-      const newX = draggableRect!.left - containerRect!.left;
-      const newY = draggableRect!.top - containerRect!.top;
-
-      if (droppedElementId === "input") {
-        newBlock = {
-          id: uuidv4(),
-          x: newX,
-          y: newY,
-          width: 150,
-          height: 32,
-          children: [],
-          blockType: "input",
-        };
-      }
-
-      if (droppedElementId === "button") {
-        newBlock = {
-          id: uuidv4(),
-          x: newX,
-          y: newY,
-          width: 150,
-          height: 32,
-          children: [],
-          blockType: "button",
-        };
-      }
-
-      droppableElement.children.push({
-        ...newBlock!,
-        parentId: droppableElement.id,
-      });
-      setElements([...elements]);
-    },
-    [elements]
-  );
-
-  const groupElement = useCallback(
-    (
-      droppedElementId: UniqueIdentifier,
-      droppableElementId: UniqueIdentifier,
-      event: DragEndEvent
-    ) => {
-      const { active, over } = event;
-      const droppableElement = elements.find(
-        (element) => element.id === droppableElementId
-      )!;
-      const droppedElementIdx = elements.findIndex(
-        (element) => element.id === droppedElementId
-      );
-      const element = elements.find(
-        (element) => element.id === droppedElementId
-      )!;
-      elements.splice(droppedElementIdx, 1);
-
-      const containerRect = document
-        .getElementById(droppableElementId as string)
-        ?.getBoundingClientRect();
-
-      const draggableRect = active.rect.current.translated;
-      const { x: clientX, y: clientY } = event.delta;
-
-      // // const clientX = event.activatorEvent.clientX;
-      // // const clientY = event.activatorEvent.clientY;
-
-      // const localY = clientY - element.y;
-      // const localX = clientX - element.x;
-
-      const newX = draggableRect!.left - containerRect!.left;
-      const newY = draggableRect!.top - containerRect!.top;
-
-      droppableElement.children.push({
-        ...element,
-        // x: localX,
-        // y: localY,
-        y: newY,
-        x: newX,
-        parentId: droppableElement.id,
-      });
-      setElements([...elements]);
-    },
-    [elements]
-  );
-
-  const dragWithinParent = useCallback(
-    (
-      draggableElementId: UniqueIdentifier,
-      parentId: string,
-      x: number,
-      y: number
-    ) => {
-      const parentElement = elements.find(
-        (element) => element.id === parentId
-      )!;
-
-      parentElement.children = parentElement.children.map((child) =>
-        child.id === draggableElementId
-          ? {
-              ...child,
-              x: child.x + x,
-              y: child.y + y,
-            }
-          : child
-      );
-      setElements([...elements]);
-    },
-    [elements]
-  );
-  /**
-  * pageX 680.5518188476562
-    pageY 325.4104919433594
-
-    deltaX: 56.04
-    deltaY: 34.01
-
-    screenX 748.70703125
-    screenY 470.3515625
-
-    cursorXCoords = pageX + deltaX
-    cursorYCoords = pageY + deltaY
-
-    offsetX 56.598731994628906
-    offsetY -14.205960273742676
-  * 
-  */
-  // const onDragEnd = useCallback(
-  //   (event: DragEndEvent) => {
-  //     const id = event.active.id;
-  //     const overId = event.over?.id;
-  //     const parentId = event.active.data?.current?.parentId;
-
-  //     console.log("id", id);
-  //     console.log("overId", overId);
-
-  //     // if (overId !== "canvas" && ["input", "button"].includes(id.toString())) {
-  //     //   addElement(id, overId, event);
-  //     //   return;
-  //     // }
-
-  //     // const element = elements.find((element) => element.id === id);
-
-  //     // const isDropping = overId && overId !== id && overId !== "canvas";
-
-  //     // //if (!element) return;
-
-  //     // // Element being dropped inside another.
-  //     // if (isDropping && element) {
-  //     //   groupElement(id, overId, event);
-  //     //   return;
-  //     // }
-  //     // // Element being dragged within a parent.
-  //     // if (parentId) {
-  //     //   dragWithinParent(id, parentId, event.delta.x, event.delta.y);
-  //     //   return;
-  //     // }
-
-  //     // if (element) {
-  // element.x += event.delta.x;
-  // element.y += event.delta.y;
-  // setElements([...elements]);
-  //     // }
-  //   },
-  //   [elements, groupElement, dragWithinParent]
-  // );
-
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -296,7 +111,6 @@ export default function CanvasProvider(props: {
             const screen = row.parentElement as HTMLDivElement;
 
             if (screen) {
-              const colId = overId;
               const rowId = row.id;
               const screenId = screen.id;
 
@@ -305,9 +119,6 @@ export default function CanvasProvider(props: {
               );
               const rowBlock = screenBlock?.children.find(
                 (element) => element.id === rowId
-              );
-              const columnBlock = rowBlock?.children.find(
-                (element) => element.id === colId
               );
 
               if (id.toString().includes("block-")) {
@@ -416,6 +227,8 @@ export default function CanvasProvider(props: {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log("direction", direction);
+    console.log("ref", ref);
     resize(delta.width, delta.height, true);
   };
 
@@ -427,6 +240,8 @@ export default function CanvasProvider(props: {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log("direction", direction);
+    console.log("ref", ref);
     resize(delta.width, delta.height, false);
   };
 

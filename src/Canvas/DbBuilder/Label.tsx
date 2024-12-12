@@ -6,19 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface LabelProps extends BlockProps {}
 
 export default function Label({ canvasObject }: LabelProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    text,
-  } = canvasObject;
+  const { id, parentId, colSpan, text } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 

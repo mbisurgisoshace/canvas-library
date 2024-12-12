@@ -5,18 +5,7 @@ import { BlockProps } from "./Block";
 interface InputProps extends BlockProps {}
 
 export default function Input({ canvasObject }: InputProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-  } = canvasObject;
+  const { id, colSpan } = canvasObject;
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({

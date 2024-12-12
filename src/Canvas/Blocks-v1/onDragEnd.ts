@@ -20,7 +20,6 @@ export const onDragEnd = (
         const screen = row.parentElement as HTMLDivElement;
 
         if (screen) {
-          const colId = overId;
           const rowId = row.id;
           const screenId = screen.id;
 
@@ -29,9 +28,6 @@ export const onDragEnd = (
           );
           const rowBlock = screenBlock?.children.find(
             (element) => element.id === rowId
-          );
-          const columnBlock = rowBlock?.children.find(
-            (element) => element.id === colId
           );
 
           if (id.toString().includes("block-")) {

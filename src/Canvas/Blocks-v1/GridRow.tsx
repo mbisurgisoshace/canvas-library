@@ -7,18 +7,7 @@ import { useMemo } from "react";
 interface GridRowProps extends BlockProps {}
 
 export default function GridRow({ canvasObject }: GridRowProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colNumber,
-  } = canvasObject;
+  const { id, width, height, children, colNumber } = canvasObject;
 
   const renderDroppableColums = useMemo(() => {
     if (colNumber) {

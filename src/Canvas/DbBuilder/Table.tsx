@@ -6,17 +6,14 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
 import { BlockProps } from "./Block";
@@ -35,21 +32,7 @@ export default function Table({ canvasObject }: TableProps) {
   const [isChangeModalOpen, setIsChangeModalOpen] = useState(false);
   const [isColumnsModalOpen, setIsColumnsModalOpen] = useState(false);
 
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    placeholder,
-    columns,
-    tableName,
-  } = canvasObject;
+  const { id, x, y, parentId, colSpan, columns, tableName } = canvasObject;
 
   const { selectElement, selectedElement, changeTableName, addTableColumn } =
     useCanvas();
@@ -205,7 +188,7 @@ export default function Table({ canvasObject }: TableProps) {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="table-menu"
-                onClick={(e) => {
+                onClick={() => {
                   setIsChangeModalOpen(true);
                 }}
               >
@@ -213,7 +196,7 @@ export default function Table({ canvasObject }: TableProps) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="table-menu"
-                onClick={(e) => {
+                onClick={() => {
                   setIsColumnsModalOpen(true);
                 }}
               >
