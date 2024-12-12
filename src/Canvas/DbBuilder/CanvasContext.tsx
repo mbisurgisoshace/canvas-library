@@ -4,7 +4,7 @@ import { useContext, createContext, useState, useCallback } from "react";
 
 import { BlockType, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
-import { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
+import { DragEndEvent } from "@dnd-kit/core";
 
 type SelectedElement = { elementId: string; parentId?: string };
 
@@ -175,29 +175,6 @@ export default function CanvasProvider(props: {
   //   [elements, groupElement, dragWithinParent]
   // );
 
-  const getBlockDomHierarchy = (
-    blockId: string
-  ):
-    | {
-        colElement: HTMLDivElement;
-        rowElement: HTMLDivElement;
-        blockElement: HTMLDivElement;
-      }
-    | undefined => {
-    if (!blockId) return;
-    const blockElement = document.getElementById(blockId)! as HTMLDivElement;
-    if (!blockElement) return;
-
-    const colElement = blockElement.parentElement as HTMLDivElement;
-    const rowElement = colElement.parentElement as HTMLDivElement;
-
-    return {
-      rowElement,
-      colElement,
-      blockElement,
-    };
-  };
-
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -256,6 +233,8 @@ export default function CanvasProvider(props: {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log("direction", direction);
+    console.log("ref", ref);
     resize(delta.width, delta.height, true);
   };
 
@@ -267,6 +246,8 @@ export default function CanvasProvider(props: {
   ) => {
     event.preventDefault();
     event.stopPropagation();
+    console.log("direction", direction);
+    console.log("ref", ref);
     resize(delta.width, delta.height, false);
   };
 

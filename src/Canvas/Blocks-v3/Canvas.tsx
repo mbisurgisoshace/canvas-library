@@ -1,7 +1,7 @@
 import { zoom } from "d3-zoom";
 import { select } from "d3-selection";
 import { BlocksIcon, ChevronDown } from "lucide-react";
-import { DndContext, DragEndEvent } from "@dnd-kit/core";
+import { Active, DndContext } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
 
@@ -14,11 +14,9 @@ import {
   FullSizeCanvas,
   CustomSizeCanvas,
 } from "../types";
-import Draggable from "../Draggable";
 import ZoomControl from "../Tools/ZoomControl";
 import Droppable from "../Droppable";
 import { useCanvas } from "./CanvasContext";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
 import { DraggableUiElement } from "../DraggableUiElement";
 import Block from "./Block";
 import { FeaturesTable } from "../FeaturesTable";
@@ -32,7 +30,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 
@@ -136,15 +133,13 @@ const UI_BLOCKS = [
 
 export default function CanvasModule(props: CanvasProps) {
   const {
-    tools = [],
     minZoom = 1,
     maxZoom = 10,
-    base = "web-div",
     enableZoom = true,
     zoomControls = false,
   } = props;
 
-  const [active, setActive] = useState<any>(null);
+  const [active, setActive] = useState<Active | null>(null);
   const {
     elements,
     onDragEnd,
@@ -206,7 +201,7 @@ export default function CanvasModule(props: CanvasProps) {
   };
 
   useEffect(() => {
-    const rows = document.querySelectorAll(".row");
+    //const rows = document.querySelectorAll(".row");
     const columns = document.querySelectorAll(".column");
 
     if (toggleGrid) {
