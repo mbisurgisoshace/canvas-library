@@ -7,18 +7,7 @@ interface GridColumnProps extends BlockProps {}
 
 export default function GridColumn({ canvasObject }: GridColumnProps) {
   const [ref, setNodeRef] = useState<HTMLDivElement | null>(null);
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-  } = canvasObject;
+  const { id, children, colSpan } = canvasObject;
 
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
     id,

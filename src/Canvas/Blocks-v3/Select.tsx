@@ -7,19 +7,7 @@ import { ChevronDown } from "lucide-react";
 interface SelectProps extends BlockProps {}
 
 export default function Select({ canvasObject }: SelectProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    placeholder,
-  } = canvasObject;
+  const { id, parentId, colSpan } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 

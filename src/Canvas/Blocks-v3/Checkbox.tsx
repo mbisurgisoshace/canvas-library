@@ -6,20 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface CheckboxProps extends BlockProps {}
 
 export default function Checkbox({ canvasObject }: CheckboxProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    placeholder,
-    label,
-  } = canvasObject;
+  const { id, parentId, colSpan, label } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 

@@ -6,20 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface InputProps extends BlockProps {}
 
 export default function Input({ canvasObject }: InputProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    placeholder,
-    style,
-  } = canvasObject;
+  const { id, parentId, colSpan, placeholder, style } = canvasObject;
 
   const { selectElement, selectedElement, isChangingStyle } = useCanvas();
 

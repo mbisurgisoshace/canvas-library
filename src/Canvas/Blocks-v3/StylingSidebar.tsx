@@ -1,7 +1,7 @@
 import { useCanvas } from "./CanvasContext";
 
 export default function StylingSidebar() {
-  const { selectedElement, changeStyle, selectedNode } = useCanvas();
+  const { changeStyle, selectedNode } = useCanvas();
 
   return (
     <div className="mt-10 ">

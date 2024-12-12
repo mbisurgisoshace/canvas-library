@@ -1,24 +1,10 @@
-import { v4 as uuidv4 } from "uuid";
-
 import { CanvasObject } from "../types";
 import Block, { BlockProps } from "./Block";
-import { useMemo } from "react";
 
 interface GridRowProps extends BlockProps {}
 
 export default function GridRow({ canvasObject }: GridRowProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colNumber,
-  } = canvasObject;
+  const { id, height, children, colNumber } = canvasObject;
 
   return (
     <div

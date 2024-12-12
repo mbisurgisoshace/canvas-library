@@ -6,19 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface ButtonProps extends BlockProps {}
 
 export default function Button({ canvasObject }: ButtonProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    text,
-  } = canvasObject;
+  const { id, parentId, colSpan, text } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 

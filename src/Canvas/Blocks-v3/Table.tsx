@@ -6,19 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface TableProps extends BlockProps {}
 
 export default function Table({ canvasObject }: TableProps) {
-  const {
-    id,
-    x,
-    y,
-    width,
-    height,
-    children,
-    parentId,
-    blockType,
-    layout,
-    colSpan,
-    placeholder,
-  } = canvasObject;
+  const { id, parentId, colSpan } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
