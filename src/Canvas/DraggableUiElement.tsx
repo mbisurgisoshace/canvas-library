@@ -9,10 +9,9 @@ export const DraggableUiElement = ({
   id,
   uiComponent,
 }: DraggableUiElementProps) => {
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id,
-    });
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id,
+  });
   return (
     <div
       id={id}

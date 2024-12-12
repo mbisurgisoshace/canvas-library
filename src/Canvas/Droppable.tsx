@@ -7,7 +7,7 @@ interface DroppableProps {
 }
 
 export default function Droppable({ id, style, children }: DroppableProps) {
-  const { isOver, setNodeRef } = useDroppable({
+  const { setNodeRef } = useDroppable({
     id,
   });
 

@@ -16,7 +16,7 @@ interface DraggableProps {
 }
 
 export default function Draggable({ canvasObject }: DraggableProps) {
-  const { id, x, y, width, height, children, parentId, blockType, layout } =
+  const { id, x, y, width, height, children, parentId, blockType } =
     canvasObject;
   const {
     elements,
@@ -28,7 +28,7 @@ export default function Draggable({ canvasObject }: DraggableProps) {
     selectedElement,
   } = useCanvas();
 
-  const { isOver, setNodeRef: setDroppableRef } = useDroppable({
+  const { setNodeRef: setDroppableRef } = useDroppable({
     id,
   });
 
@@ -46,30 +46,30 @@ export default function Draggable({ canvasObject }: DraggableProps) {
     setDroppableRef(el);
   };
 
-  const layoutProps = () => {
-    const layoutProps: {
-      gap?: number;
-      display?: string;
-      flexDirection?: string;
-      gridTemplateRows?: string;
-      gridTemplateColumns?: string;
-    } = {};
+  // const layoutProps = () => {
+  //   const layoutProps: {
+  //     gap?: number;
+  //     display?: string;
+  //     flexDirection?: string;
+  //     gridTemplateRows?: string;
+  //     gridTemplateColumns?: string;
+  //   } = {};
 
-    if (blockType === "screen" && layout) {
-      if (layout.display !== "free") layoutProps.display = layout.display;
+  //   if (blockType === "screen" && layout) {
+  //     if (layout.display !== "free") layoutProps.display = layout.display;
 
-      if (layout.display === "grid" && layout.rows)
-        layoutProps.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
-      if (layout.display === "grid" && layout.columns)
-        layoutProps.gridTemplateColumns = `repeat(${layout.columns}, 1fr)`;
-      if (layout.display === "flex") {
-        layoutProps.gap = 12;
-        layoutProps.flexDirection = "column";
-      }
-    }
+  //     if (layout.display === "grid" && layout.rows)
+  //       layoutProps.gridTemplateRows = `repeat(${layout.rows}, 1fr)`;
+  //     if (layout.display === "grid" && layout.columns)
+  //       layoutProps.gridTemplateColumns = `repeat(${layout.columns}, 1fr)`;
+  //     if (layout.display === "flex") {
+  //       layoutProps.gap = 12;
+  //       layoutProps.flexDirection = "column";
+  //     }
+  //   }
 
-    return layoutProps;
-  };
+  //   return layoutProps;
+  // };
 
   const hasParentFreeLayout = () => {
     if (!parentId) return true;
@@ -130,9 +130,9 @@ export default function Draggable({ canvasObject }: DraggableProps) {
             size={{ width, height }}
             onResizeStop={onResizeStop}
             onResizeStart={onResizeStart}
-            style={{
-              ...layoutProps(),
-            }}
+            // style={{
+            //   ...layoutProps(),
+            // }}
           >
             {children.map((child) => (
               <Draggable key={child.id} canvasObject={child} />
@@ -310,9 +310,9 @@ export default function Draggable({ canvasObject }: DraggableProps) {
         size={{ width, height }}
         onResizeStop={onResizeStop}
         onResizeStart={onResizeStart}
-        style={{
-          ...layoutProps(),
-        }}
+        // style={{
+        //   ...layoutProps(),
+        // }}
       >
         {children.map((child) => (
           <Draggable key={child.id} canvasObject={child} />

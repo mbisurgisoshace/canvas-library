@@ -3,7 +3,6 @@ import { CircleX, CircleCheck } from "lucide-react";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
