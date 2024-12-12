@@ -12,7 +12,7 @@ import { App3 } from "./Canvas/Blocks-v3/App3.tsx";
 import { DbBuilder } from "./Canvas/DbBuilder/DbBuilder.tsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: <Navigate to={"/impl1"} /> },
+  { path: "/", element: <Navigate to={"/impl3"} /> },
   { path: "/impl1", element: <App1 /> },
   { path: "/impl2", element: <App2 /> },
   { path: "/impl3", element: <App3 /> },
