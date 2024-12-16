@@ -4,6 +4,7 @@ import { BlocksIcon, ChevronDown } from "lucide-react";
 import { Active, DndContext } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
+import { doc, getDoc } from "firebase/firestore";
 
 import "../styles.css";
 
@@ -32,6 +33,9 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { db } from "@/firebase";
+import { useParams } from "react-router-dom";
+import CanvasDropdown from "../CanvasDropdown";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -132,6 +136,8 @@ const UI_BLOCKS = [
 ];
 
 export default function CanvasModule(props: CanvasProps) {
+  const { canvasId } = useParams();
+
   const {
     minZoom = 1,
     maxZoom = 10,
@@ -154,6 +160,10 @@ export default function CanvasModule(props: CanvasProps) {
 
   const updateXarrow = useXarrow();
   const [toggleGrid, setToggleGrid] = useState(false);
+  const [selectedCanvas, setSelectedCanvas] = useState<{
+    id: string;
+    title: string;
+  } | null>(null);
   const [transform, setTransform] = useState<Transform>({ k: 1, x: 0, y: 0 });
 
   const canvasWidth = props.canvasSize === "full" ? "100%" : props.width;
@@ -208,6 +218,19 @@ export default function CanvasModule(props: CanvasProps) {
   };
 
   useEffect(() => {
+    getCanvas();
+
+    async function getCanvas() {
+      const docRef = doc(db, "canvas", canvasId as string);
+      const docSnap = await getDoc(docRef);
+
+      if (docSnap.exists()) {
+        setSelectedCanvas({ id: docSnap.id, title: docSnap.data().title });
+      }
+    }
+  }, [canvasId]);
+
+  useEffect(() => {
     //const rows = document.querySelectorAll(".row");
     const columns = document.querySelectorAll(".column");
 
@@ -244,8 +267,14 @@ export default function CanvasModule(props: CanvasProps) {
         active && active.data.current ? active.data.current.modifiers : []
       }
     >
+      <CanvasDropdown />
       <Xwrapper>
         <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
+          {selectedCanvas && (
+            <h2 className="text-3xl font-bold text-slate-700 mb-3">
+              {selectedCanvas.title}
+            </h2>
+          )}
           <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
             Layout Elements
             <BlocksIcon />

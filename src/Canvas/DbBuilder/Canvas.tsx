@@ -18,6 +18,7 @@ import Droppable from "../Droppable";
 import { useCanvas } from "./CanvasContext";
 import { DraggableUiElement } from "../DraggableUiElement";
 import Block from "./Block";
+import CanvasDropdown from "../CanvasDropdown";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -129,6 +130,7 @@ export default function CanvasModule(props: CanvasProps) {
         active && active.data.current ? active.data.current.modifiers : []
       }
     >
+      <CanvasDropdown />
       <div className="absolute z-20 h-full w-[250px] bg-slate-100 border-r border-slate-300 py-2 px-4">
         <h3 className="text-xl font-semibold text-slate-600 flex flex-row items-center justify-between">
           UI Elements
