@@ -29,8 +29,6 @@ export default function Input({ canvasObject }: InputProps) {
           : undefined,
       }}
       onPointerDown={(e) => {
-        console.log("e", e);
-
         selectElement({ elementId: id, parentId });
 
         if (listeners && listeners.onPointerDown) {

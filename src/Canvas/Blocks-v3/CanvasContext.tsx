@@ -225,6 +225,8 @@ export default function CanvasProvider(props: {
     (event: DragEndEvent) => {
       const id = event.active.id;
       const overId = event.over?.id;
+      console.log("id", id);
+      console.log("overId", overId);
 
       if (id === "ui-screen" && overId === "canvas") {
         const newScreen = createScreen();
@@ -275,9 +277,13 @@ export default function CanvasProvider(props: {
                   currentRow?.parentElement as HTMLDivElement;
 
                 if (currentScreen && currentRow && currentColumn) {
+                  console.log("elements", elements);
+
                   const currentRowId = currentRow.id;
                   const currentColId = currentColumn.id;
                   const currentScreenId = currentScreen.id;
+
+                  console.log("currentRowId", currentRowId);
 
                   const currentScreenBlock = elements.find(
                     (element) => element.id === currentScreenId
@@ -290,6 +296,11 @@ export default function CanvasProvider(props: {
                   const currentColumnBlock = currentRowBlock?.children.find(
                     (element) => element.id === currentColId
                   );
+
+                  console.log("currentScreenBlock", currentScreenBlock);
+                  console.log("currentRowBlock", currentRowBlock);
+
+                  console.log("currentColumnBlock", currentColumnBlock);
 
                   if (currentColumnBlock) {
                     const elementBlock = currentColumnBlock?.children.find(

@@ -12,6 +12,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
       style={{
         height,
         width: "100%",
+        minHeight: height,
         alignContent: "stretch",
         gridTemplateColumns: `repeat(${colNumber}, 1fr)`,
       }}

@@ -175,11 +175,18 @@ export default function CanvasModule(props: CanvasProps) {
     if (enableZoom) {
       zoomBehavior
         .filter((e) => {
+          const target = e.target as HTMLDivElement;
+          const isPannableArea = target.className.includes(
+            "zoomablePannableArea"
+          );
+
+          if (!isPannableArea) return false;
+
           const isResizeHandle = (
             e.target as HTMLDivElement
           ).offsetParent?.className.includes("resizable");
 
-          return !isResizeHandle;
+          return !isResizeHandle || !isPannableArea;
         })
         .on("zoom", updateTransform);
       select<HTMLDivElement, unknown>(".canvasWrapper").call(zoomBehavior);

@@ -41,10 +41,10 @@ export default function Screen({ canvasObject }: ScreenProps) {
       className="draggable flex flex-col"
       style={{
         width,
-        height,
         top: y,
         left: x,
         //padding: 10,
+        minHeight: height,
         position: "absolute",
         backgroundColor: "white",
         zIndex: isDragging ? 9999 : -10,
@@ -98,6 +98,13 @@ export default function Screen({ canvasObject }: ScreenProps) {
       {(children as CanvasObject[]).map((canvasObj) => (
         <Block key={canvasObj.id} canvasObject={canvasObj} />
       ))}
+
+      <div
+        style={{
+          top: height,
+        }}
+        className={`absolute w-full border-b border-dashed border-gray-300`}
+      />
     </div>
   );
 }
