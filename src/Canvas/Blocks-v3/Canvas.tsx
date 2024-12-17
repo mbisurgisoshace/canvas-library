@@ -5,6 +5,8 @@ import { Active, DndContext } from "@dnd-kit/core";
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Xarrow, { useXarrow, Xwrapper } from "react-xarrows";
 import { doc, getDoc } from "firebase/firestore";
+import html2canvas from "html2canvas";
+import { saveAs } from "file-saver";
 
 import "../styles.css";
 
@@ -433,6 +435,22 @@ export default function CanvasModule(props: CanvasProps) {
             }}
           >
             Export to JSON
+          </button>
+
+          <button
+            className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full"
+            onClick={async () => {
+              const canvas = await html2canvas(
+                document.querySelector(".canvasWrapper") as HTMLElement
+              );
+              if (canvas) {
+                canvas.toBlob((blob) => {
+                  saveAs(blob, "test.png");
+                });
+              }
+            }}
+          >
+            Take Screenshot
           </button>
         </div>
 
