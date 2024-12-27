@@ -7,7 +7,7 @@ interface GridColumnProps extends BlockProps {}
 
 export default function GridColumn({ canvasObject }: GridColumnProps) {
   const [ref, setNodeRef] = useState<HTMLDivElement | null>(null);
-  const { id, children, colSpan } = canvasObject;
+  const { id, children, colSpan, style } = canvasObject;
 
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
     id,
@@ -26,6 +26,7 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
       id={id}
       style={{
         gridColumn: `span ${colSpan}`,
+        ...style,
       }}
       className={`items-center flex-1 ${isOver ? "bg-red-500/20" : ""} column`}
     >

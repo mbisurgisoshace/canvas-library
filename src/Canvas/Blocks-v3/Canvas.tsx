@@ -247,6 +247,8 @@ export default function CanvasModule(props: CanvasProps) {
     }
   }, [toggleGrid, elements]);
 
+  console.log("elements", elements);
+
   /**
    * Rendering will changed based on the base prop.
    *    - web-div: Render the canvas using a div element
