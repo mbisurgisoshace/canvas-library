@@ -6,7 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface ButtonProps extends BlockProps {}
 
 export default function Button({ canvasObject }: ButtonProps) {
-  const { id, parentId, colSpan, text } = canvasObject;
+  const { id, parentId, colSpan, text, style } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
@@ -46,6 +46,7 @@ export default function Button({ canvasObject }: ButtonProps) {
           border: `1px solid ${
             selectedElement?.elementId === id ? "#0984e3" : "transparent"
           }`,
+          ...style,
         }}
       >
         {text}

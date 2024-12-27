@@ -14,7 +14,8 @@ import { useCanvas } from "./CanvasContext";
 interface ScreenProps extends BlockProps {}
 
 export default function Screen({ canvasObject }: ScreenProps) {
-  const { id, x, y, width, height, children, parentId, title } = canvasObject;
+  const { id, x, y, width, height, children, parentId, title, style } =
+    canvasObject;
 
   const { selectElement, selectedElement, duplicateScreen } = useCanvas();
 
@@ -54,6 +55,7 @@ export default function Screen({ canvasObject }: ScreenProps) {
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
           : undefined,
+        ...style,
       }}
       onPointerDown={(e) => {
         const el = e.target as HTMLElement;

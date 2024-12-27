@@ -6,7 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface LabelProps extends BlockProps {}
 
 export default function Label({ canvasObject }: LabelProps) {
-  const { id, parentId, colSpan, text } = canvasObject;
+  const { id, parentId, colSpan, text, style } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
@@ -27,6 +27,7 @@ export default function Label({ canvasObject }: LabelProps) {
         transform: transform
           ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
           : undefined,
+        ...style,
       }}
       onPointerDown={(e) => {
         console.log("e", e);

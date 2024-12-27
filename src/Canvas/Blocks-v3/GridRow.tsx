@@ -4,7 +4,7 @@ import Block, { BlockProps } from "./Block";
 interface GridRowProps extends BlockProps {}
 
 export default function GridRow({ canvasObject }: GridRowProps) {
-  const { id, height, children, colNumber } = canvasObject;
+  const { id, height, children, colNumber, style } = canvasObject;
 
   return (
     <div
@@ -15,6 +15,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
         minHeight: height,
         alignContent: "stretch",
         gridTemplateColumns: `repeat(${colNumber}, 1fr)`,
+        ...style,
       }}
       className={`grid gap-1 relative p-2 content-start row`}
     >
