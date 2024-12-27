@@ -445,7 +445,7 @@ export default function CanvasModule(props: CanvasProps) {
               );
               if (canvas) {
                 canvas.toBlob((blob) => {
-                  saveAs(blob, "test.png");
+                  saveAs(blob as Blob, "test.png");
                 });
               }
             }}
