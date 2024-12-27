@@ -245,7 +245,7 @@ export default function CanvasModule(props: CanvasProps) {
         col.classList.remove("bg-red-200");
       });
     }
-  }, [toggleGrid]);
+  }, [toggleGrid, elements]);
 
   /**
    * Rendering will changed based on the base prop.
