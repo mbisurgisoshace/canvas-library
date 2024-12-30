@@ -29,7 +29,7 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
         gridColumn: `span ${colSpan}`,
         ...style,
       }}
-      className={`items-center flex-1 ${isOver ? "bg-red-500/20" : ""} column`}
+      className={`items-center flex-1 ${isOver ? "!bg-red-500/20" : ""} column`}
     >
       {/* {children.length > 0 && <Block canvasObject={children[0]} />} */}
       {(children as CanvasObject[]).map((canvasObj) => (

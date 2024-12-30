@@ -30,8 +30,6 @@ export default function Label({ canvasObject }: LabelProps) {
         ...style,
       }}
       onPointerDown={(e) => {
-        console.log("e", e);
-
         selectElement({ elementId: id, parentId });
 
         if (listeners && listeners.onPointerDown) {
