@@ -46,6 +46,7 @@ type CanvasContextType = {
   rowLayout: string | undefined;
   setRowLayout: (layout: string) => void;
   onCreateRow: () => void;
+  onChangeRowHeight: (height: number) => void;
   duplicateScreen: (screen: CanvasObject) => void;
   applyStyleWithJson: (styles: React.CSSProperties) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
@@ -251,25 +252,6 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
-  // const findElement = useCallback(
-  //   (elementId: string, elements: CanvasObject[]): CanvasObject | undefined => {
-  //     let foundElement: CanvasObject | undefined;
-
-  //     for (let i = 0; i < elements.length; i++) {
-  //       const element = elements[i];
-
-  //       if (element.id === elementId) {
-  //         return element;
-  //       }
-
-  //       foundElement = findElement(elementId, element.children);
-  //     }
-
-  //     return foundElement;
-  //   },
-  //   []
-  // );
-
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -435,7 +417,6 @@ export default function CanvasProvider(props: {
     };
 
     const droppableElement = findElement(newRowData.screenId!, elements);
-    console.log("droppableElement", droppableElement);
 
     // const screen = elements.find(
     //   (element) => element.id === newRowData?.screenId
@@ -568,6 +549,27 @@ export default function CanvasProvider(props: {
     return cols;
   };
 
+  const onChangeRowHeight = useCallback(
+    (height: number) => {
+      if (!selectedElement) return;
+      //let element: CanvasObject | undefined;
+      setIsChangingStyle(true);
+
+      setTimeout(() => {
+        setIsChangingStyle(false!);
+      }, 1500);
+
+      const element = findElement(selectedElement.elementId!, elements);
+
+      if (element) {
+        element.height = height;
+
+        setElements([...elements]);
+      }
+    },
+    [elements, selectedElement]
+  );
+
   const value = {
     elements,
     onDragEnd,
@@ -587,6 +589,7 @@ export default function CanvasProvider(props: {
     isChangingStyle,
     selectedElement,
     unselectElement,
+    onChangeRowHeight,
     applyStyleWithJson,
   };
 

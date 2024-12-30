@@ -3,12 +3,32 @@ import { useCanvas } from "./CanvasContext";
 
 export default function StylingSidebar() {
   const ref = useRef<HTMLTextAreaElement>(null);
-  const { changeStyle, selectedNode, applyStyleWithJson } = useCanvas();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const { changeStyle, selectedNode, applyStyleWithJson, onChangeRowHeight } =
+    useCanvas();
 
   const renderStylingBar = () => {
     if (!selectedNode) return;
 
     switch (selectedNode.blockType) {
+      case "grid-row":
+        return (
+          <div className="flex gap-1 flex-col">
+            <div className="flex flex-col">
+              <label>Height</label>
+              <input
+                ref={inputRef}
+                type="number"
+                className="mt-1"
+                onBlur={() => {
+                  if (inputRef.current?.value) {
+                    onChangeRowHeight(parseInt(inputRef.current?.value));
+                  }
+                }}
+              />
+            </div>
+          </div>
+        );
       case "label":
         return (
           <div className="flex gap-1 flex-col">
