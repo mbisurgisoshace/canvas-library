@@ -2,6 +2,7 @@ import { useDroppable } from "@dnd-kit/core";
 
 import Block, { BlockProps } from "./Block";
 import { useEffect, useState } from "react";
+import { CanvasObject } from "../types";
 
 interface GridColumnProps extends BlockProps {}
 
@@ -30,7 +31,10 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
       }}
       className={`items-center flex-1 ${isOver ? "bg-red-500/20" : ""} column`}
     >
-      {children.length > 0 && <Block canvasObject={children[0]} />}
+      {/* {children.length > 0 && <Block canvasObject={children[0]} />} */}
+      {(children as CanvasObject[]).map((canvasObj) => (
+        <Block key={canvasObj.id} canvasObject={canvasObj} />
+      ))}
     </div>
   );
 }

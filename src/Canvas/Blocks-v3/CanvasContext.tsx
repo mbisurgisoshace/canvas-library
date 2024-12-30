@@ -47,6 +47,7 @@ type CanvasContextType = {
   setRowLayout: (layout: string) => void;
   onCreateRow: () => void;
   duplicateScreen: (screen: CanvasObject) => void;
+  applyStyleWithJson: (styles: React.CSSProperties) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
 
@@ -121,48 +122,76 @@ export default function CanvasProvider(props: {
     if (!selectedElement) return;
     let element: CanvasObject | undefined;
 
-    for (let i = 0; i < elements.length; i++) {
-      const screen = elements[i];
-      screen.children.forEach((row) => {
-        row.children.forEach((col) => {
-          col.children.forEach((block) => {
-            if (block.id === selectedElement?.elementId) {
-              element = block;
-            }
-          });
-        });
-      });
-    }
+    return findElement(selectedElement.elementId, elements);
+
+    // for (let i = 0; i < elements.length; i++) {
+    //   const screen = elements[i];
+    //   screen.children.forEach((row) => {
+    //     row.children.forEach((col) => {
+    //       col.children.forEach((block) => {
+    //         if (block.id === selectedElement?.elementId) {
+    //           element = block;
+    //         }
+    //       });
+    //     });
+    //   });
+    // }
 
     return element;
   }, [elements, selectedElement]);
 
   const changeStyle = useCallback(
-    (styleProp: string, stylePropValue: string) => {
-      let element: CanvasObject | undefined;
+    (styleProp: string, stylePropValue: string | number) => {
+      if (!selectedElement) return;
+      //let element: CanvasObject | undefined;
       setIsChangingStyle(true);
 
       setTimeout(() => {
         setIsChangingStyle(false!);
       }, 1500);
 
-      for (let i = 0; i < elements.length; i++) {
-        const screen = elements[i];
-        screen.children.forEach((row) => {
-          row.children.forEach((col) => {
-            col.children.forEach((block) => {
-              if (block.id === selectedElement?.elementId) {
-                element = block;
-              }
-            });
-          });
-        });
-      }
+      // for (let i = 0; i < elements.length; i++) {
+      //   const screen = elements[i];
+      //   screen.children.forEach((row) => {
+      //     row.children.forEach((col) => {
+      //       col.children.forEach((block) => {
+      //         if (block.id === selectedElement?.elementId) {
+      //           element = block;
+      //         }
+      //       });
+      //     });
+      //   });
+      // }
+      const element = findElement(selectedElement.elementId!, elements);
 
       if (element) {
         element.style = {
           ...element.style,
           [styleProp]: stylePropValue,
+        };
+
+        setElements([...elements]);
+      }
+    },
+    [elements, selectedElement]
+  );
+
+  const applyStyleWithJson = useCallback(
+    (styles: React.CSSProperties) => {
+      if (!selectedElement) return;
+      //let element: CanvasObject | undefined;
+      setIsChangingStyle(true);
+
+      setTimeout(() => {
+        setIsChangingStyle(false!);
+      }, 1500);
+
+      const element = findElement(selectedElement.elementId!, elements);
+
+      if (element) {
+        element.style = {
+          ...element.style,
+          ...styles,
         };
 
         setElements([...elements]);
@@ -392,8 +421,8 @@ export default function CanvasProvider(props: {
   };
 
   const onCreateRow = () => {
-    console.log("rowLayout", rowLayout);
-    console.log("newRowData", newRowData);
+    if (!newRowData) return;
+
     const newRow: CanvasObject = {
       blockType: "grid-row",
       id: `grid-row-${uuidv4()}`,
@@ -405,12 +434,20 @@ export default function CanvasProvider(props: {
       children: createColumnsLayout(rowLayout!),
     };
 
-    const screen = elements.find(
-      (element) => element.id === newRowData?.screenId
-    );
+    const droppableElement = findElement(newRowData.screenId!, elements);
+    console.log("droppableElement", droppableElement);
 
-    if (screen) {
-      screen.children.push(newRow);
+    // const screen = elements.find(
+    //   (element) => element.id === newRowData?.screenId
+    // );
+
+    // if (screen) {
+    //   screen.children.push(newRow);
+    //   setElements([...elements]);
+    // }
+
+    if (droppableElement) {
+      droppableElement.children.push(newRow);
       setElements([...elements]);
     }
 
@@ -550,6 +587,7 @@ export default function CanvasProvider(props: {
     isChangingStyle,
     selectedElement,
     unselectElement,
+    applyStyleWithJson,
   };
 
   return (
