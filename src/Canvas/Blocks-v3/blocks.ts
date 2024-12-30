@@ -507,7 +507,23 @@ export const elements: CanvasObject[] = [
                     width: 200,
                     height: 250,
                     colSpan: 1,
-                    children: [],
+                    children: [
+                      {
+                        blockType: "header",
+                        id: `block-${uuidv4()}`,
+                        x: 0,
+                        y: 0,
+                        width: 200,
+                        height: 50,
+                        children: [],
+                        colSpan: 1,
+                        text: "Loja",
+                        style: {
+                          fontSize: 18,
+                          textAlign: "center",
+                        },
+                      },
+                    ],
                   },
                   {
                     blockType: "grid-column",

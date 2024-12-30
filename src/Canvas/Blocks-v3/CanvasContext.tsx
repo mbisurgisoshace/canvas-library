@@ -11,6 +11,7 @@ import {
 import { BlockType, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent } from "@dnd-kit/core";
+import { findElement } from "./utils";
 
 type SelectedElement = { elementId: string; parentId?: string };
 
@@ -221,6 +222,25 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
+  // const findElement = useCallback(
+  //   (elementId: string, elements: CanvasObject[]): CanvasObject | undefined => {
+  //     let foundElement: CanvasObject | undefined;
+
+  //     for (let i = 0; i < elements.length; i++) {
+  //       const element = elements[i];
+
+  //       if (element.id === elementId) {
+  //         return element;
+  //       }
+
+  //       foundElement = findElement(elementId, element.children);
+  //     }
+
+  //     return foundElement;
+  //   },
+  //   []
+  // );
+
   const onDragEnd = useCallback(
     (event: DragEndEvent) => {
       const id = event.active.id;
@@ -240,90 +260,123 @@ export default function CanvasProvider(props: {
           return;
         }
 
-        const column = document.getElementById(overId as string);
+        //const column = document.getElementById(overId as string);
 
-        if (column) {
-          const row = column.parentElement as HTMLDivElement;
+        const droppableElement = findElement(overId as string, elements);
 
-          if (row) {
-            const screen = row.parentElement as HTMLDivElement;
+        if (droppableElement) {
+          if (id.toString().includes("block-")) {
+            // It is an element already on the screen
+            const existingElement = findElement(id.toString(), elements);
+            const existingDomElement = document.getElementById(id.toString());
 
-            if (screen) {
-              const colId = overId;
-              const rowId = row.id;
-              const screenId = screen.id;
-
-              const screenBlock = elements.find(
-                (element) => element.id === screenId
-              );
-              const rowBlock = screenBlock?.children.find(
-                (element) => element.id === rowId
-              );
-              const columnBlock = rowBlock?.children.find(
-                (element) => element.id === colId
+            if (existingElement) {
+              const existingElementDomParent =
+                existingDomElement?.parentElement as HTMLDivElement;
+              const existingElementParent = findElement(
+                existingElementDomParent.id,
+                elements
               );
 
-              if (columnBlock?.children.length) {
-                return;
-              }
+              existingElementParent!.children =
+                existingElementParent!.children.filter(
+                  (element) => element.id !== id.toString()
+                );
 
-              if (id.toString().includes("block-")) {
-                // It is an element already on the screen
-                const element = document.getElementById(id.toString())!;
-                const currentColumn = element.parentElement as HTMLDivElement;
-                const currentRow =
-                  currentColumn?.parentElement as HTMLDivElement;
-                const currentScreen =
-                  currentRow?.parentElement as HTMLDivElement;
-
-                if (currentScreen && currentRow && currentColumn) {
-                  console.log("elements", elements);
-
-                  const currentRowId = currentRow.id;
-                  const currentColId = currentColumn.id;
-                  const currentScreenId = currentScreen.id;
-
-                  console.log("currentRowId", currentRowId);
-
-                  const currentScreenBlock = elements.find(
-                    (element) => element.id === currentScreenId
-                  );
-
-                  const currentRowBlock = currentScreenBlock?.children.find(
-                    (element) => element.id === currentRowId
-                  );
-
-                  const currentColumnBlock = currentRowBlock?.children.find(
-                    (element) => element.id === currentColId
-                  );
-
-                  console.log("currentScreenBlock", currentScreenBlock);
-                  console.log("currentRowBlock", currentRowBlock);
-
-                  console.log("currentColumnBlock", currentColumnBlock);
-
-                  if (currentColumnBlock) {
-                    const elementBlock = currentColumnBlock?.children.find(
-                      (element) => element.id === id.toString()
-                    );
-                    currentColumnBlock.children =
-                      currentColumnBlock?.children.filter(
-                        (element) => element.id !== id.toString()
-                      );
-
-                    columnBlock?.children.push(elementBlock!);
-                  }
-                }
-              } else if (id.toString().includes("ui-")) {
-                // Create a new element on the screen
-                const newBlock = createBlock(id.toString());
-                columnBlock?.children.push(newBlock);
-              }
-
-              setElements([...elements]);
+              droppableElement.children.push(existingElement);
             }
+          } else if (id.toString().includes("ui-")) {
+            // Create a new element on the screen
+            const newBlock = createBlock(id.toString());
+            droppableElement.children.push(newBlock);
           }
+
+          setElements([...elements]);
         }
+
+        // if (column) {
+        //   const row = column.parentElement as HTMLDivElement;
+        //   console.log("row", row);
+
+        //   if (row) {
+        //     const screen = row.parentElement as HTMLDivElement;
+
+        //     if (screen) {
+        //       const colId = overId;
+        //       const rowId = row.id;
+        //       const screenId = screen.id;
+
+        //       const screenBlock = elements.find(
+        //         (element) => element.id === screenId
+        //       );
+        //       const rowBlock = screenBlock?.children.find(
+        //         (element) => element.id === rowId
+        //       );
+        //       const columnBlock = rowBlock?.children.find(
+        //         (element) => element.id === colId
+        //       );
+
+        //       if (columnBlock?.children.length) {
+        //         return;
+        //       }
+
+        //       if (id.toString().includes("block-")) {
+        //         // It is an element already on the screen
+        //         const element = document.getElementById(id.toString())!;
+        //         const currentColumn = element.parentElement as HTMLDivElement;
+        //         const currentRow =
+        //           currentColumn?.parentElement as HTMLDivElement;
+        //         const currentScreen =
+        //           currentRow?.parentElement as HTMLDivElement;
+
+        //         if (currentScreen && currentRow && currentColumn) {
+        //           console.log("elements", elements);
+
+        //           const currentRowId = currentRow.id;
+        //           const currentColId = currentColumn.id;
+        //           const currentScreenId = currentScreen.id;
+
+        //           console.log("currentRowId", currentRowId);
+
+        //           const currentScreenBlock = elements.find(
+        //             (element) => element.id === currentScreenId
+        //           );
+
+        //           const currentRowBlock = currentScreenBlock?.children.find(
+        //             (element) => element.id === currentRowId
+        //           );
+
+        //           const currentColumnBlock = currentRowBlock?.children.find(
+        //             (element) => element.id === currentColId
+        //           );
+
+        //           console.log("currentScreenBlock", currentScreenBlock);
+        //           console.log("currentRowBlock", currentRowBlock);
+
+        //           console.log("currentColumnBlock", currentColumnBlock);
+
+        //           if (currentColumnBlock) {
+        //             const elementBlock = currentColumnBlock?.children.find(
+        //               (element) => element.id === id.toString()
+        //             );
+        //             currentColumnBlock.children =
+        //               currentColumnBlock?.children.filter(
+        //                 (element) => element.id !== id.toString()
+        //               );
+
+        //             columnBlock?.children.push(elementBlock!);
+        //           }
+        //         }
+        //       } else if (id.toString().includes("ui-")) {
+        // // Create a new element on the screen
+        // const newBlock = createBlock(id.toString());
+        // columnBlock?.children.push(newBlock);
+        //       }
+
+        //       setElements([...elements]);
+        //     }
+        //   }
+        // }
 
         return;
       }

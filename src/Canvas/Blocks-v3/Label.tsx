@@ -49,7 +49,7 @@ export default function Label({ canvasObject }: LabelProps) {
           }`,
         }}
       >
-        {text}
+        {text || "My Label"}
       </label>
     </div>
   );
