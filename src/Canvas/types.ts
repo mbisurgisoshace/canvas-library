@@ -13,6 +13,7 @@ export type FullSizeCanvas = { canvasSize: "full" };
  * Canvas Object types
  */
 export type BlockType =
+  | "icon"
   | "block"
   | "label"
   | "screen"

@@ -6,7 +6,7 @@ import { useCanvas } from "./CanvasContext";
 interface TableProps extends BlockProps {}
 
 export default function Table({ canvasObject }: TableProps) {
-  const { id, parentId, colSpan } = canvasObject;
+  const { id, parentId, colSpan, tableConfig, style } = canvasObject;
 
   const { selectElement, selectedElement } = useCanvas();
 
@@ -45,27 +45,25 @@ export default function Table({ canvasObject }: TableProps) {
           border: `1px solid ${
             selectedElement?.elementId === id ? "#0984e3" : "transparent"
           }`,
+          ...style,
         }}
       >
         <table className="w-full">
           <thead>
             <tr>
-              <th>Calf Name</th>
-              <th>Breed</th>
-              <th>Date of Birth</th>
+              {tableConfig?.columns.map((column, index) => (
+                <th key={index}>{column}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>Calf 1</td>
-              <td>Heir</td>
-              <td className="text-right">10/10/2024</td>
-            </tr>
-            <tr>
-              <td>Calf 2</td>
-              <td>Heir</td>
-              <td className="text-right">10/09/2024</td>
-            </tr>
+            {tableConfig?.data.map((row, index) => (
+              <tr key={index}>
+                {row.map((cell, index) => (
+                  <td key={index}>{cell}</td>
+                ))}
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>

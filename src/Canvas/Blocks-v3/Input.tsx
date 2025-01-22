@@ -51,6 +51,7 @@ export default function Input({ canvasObject }: InputProps) {
               ? "#0984e3"
               : style?.borderColor || "black",
           borderStyle: style?.borderStyle || "solid",
+          ...style,
         }}
       />
       {/* <div className="border border-slate-700 h-8 rounded-md px-2 w-full flex items-center">
