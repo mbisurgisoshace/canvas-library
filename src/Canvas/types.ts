@@ -58,3 +58,70 @@ export interface CanvasObject {
  * Tools types
  */
 export type Tool = "ui-base-component-library" | "ui-custom-component-library";
+
+interface Block {
+  x: number;
+  y: number;
+  id: string;
+  width: number;
+  height: number;
+  style?: React.CSSProperties;
+  children: CanvasBlock[];
+}
+
+export interface Row extends Block {
+  blockType: "grid-row";
+  columnNumber: number;
+}
+export interface Input extends Block {
+  blockType: "input";
+  placeholder?: string;
+}
+export interface Label extends Block {
+  blockType: "label";
+  text: string;
+}
+export interface Table extends Block {
+  blockType: "table";
+  tableConfig: {
+    data: string[][];
+    columns: string[];
+  };
+}
+export interface Screen extends Block {
+  blockType: "screen";
+  title: string;
+}
+export interface Header extends Block {
+  blockType: "header";
+  text: string;
+}
+export interface Button extends Block {
+  blockType: "button";
+  text: string;
+}
+
+export interface Select extends Block {
+  blockType: "select";
+  options: string[];
+}
+export interface Column extends Block {
+  blockType: "grid-column";
+  columnSpan: number;
+}
+export interface Checkbox extends Block {
+  blockType: "checkbox";
+  label: string;
+}
+
+export type CanvasBlock =
+  | Row
+  | Input
+  | Label
+  | Table
+  | Select
+  | Screen
+  | Header
+  | Button
+  | Column
+  | Checkbox;
