@@ -1,18 +1,17 @@
 import Input from "./Input";
+import Label from "./Label";
+import Table from "./Table";
 import Screen from "./Screen";
+import Button from "./Button";
+import Header from "./Header";
+import Select from "./Select";
 import GridRow from "./GridRow";
+import Checkbox from "./Checkbox";
 import GridColumn from "./GridColumn";
 
-import { CanvasObject } from "../types";
-import Header from "./Header";
-import Checkbox from "./Checkbox";
-import Table from "./Table";
-import Select from "./Select";
-import Label from "./Label";
-import Button from "./Button";
-
+import { CanvasBlock } from "../types";
 export interface BlockProps {
-  canvasObject: CanvasObject;
+  canvasObject: CanvasBlock;
 }
 
 export default function Block({ canvasObject }: BlockProps) {

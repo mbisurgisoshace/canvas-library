@@ -1,10 +1,10 @@
-import { CanvasObject } from "../types";
+import { CanvasBlock, CanvasObject } from "../types";
 
 export const findElement = (
   elementId: string,
-  elements: CanvasObject[]
-): CanvasObject | undefined => {
-  let foundElement: CanvasObject | undefined;
+  elements: CanvasBlock[]
+): CanvasBlock | undefined => {
+  let foundElement: CanvasBlock | undefined;
 
   for (let i = 0; i < elements.length; i++) {
     const element = elements[i];

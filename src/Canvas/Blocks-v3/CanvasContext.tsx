@@ -8,7 +8,7 @@ import {
   useMemo,
 } from "react";
 
-import { BlockType, CanvasObject } from "../types";
+import { BlockType, CanvasBlock, CanvasObject } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent } from "@dnd-kit/core";
 import { findElement } from "./utils";
@@ -16,7 +16,7 @@ import { findElement } from "./utils";
 type SelectedElement = { elementId: string; parentId?: string };
 
 type CanvasContextType = {
-  elements: CanvasObject[];
+  elements: CanvasBlock[];
   unselectElement: () => void;
   selectedElement: SelectedElement | null;
   onDragEnd: (event: DragEndEvent) => void;
@@ -40,14 +40,14 @@ type CanvasContextType = {
       | React.TouchEvent<HTMLElement>
   ) => void;
   isChangingStyle: boolean;
-  selectedNode: CanvasObject | undefined;
+  selectedNode: CanvasBlock | undefined;
   newRowData: { screenId: string } | undefined;
   setNewRowData: (data: { screenId: string } | undefined) => void;
   rowLayout: string | undefined;
   setRowLayout: (layout: string) => void;
   onCreateRow: () => void;
   onChangeRowHeight: (height: number) => void;
-  duplicateScreen: (screen: CanvasObject) => void;
+  duplicateScreen: (screen: CanvasBlock) => void;
   applyStyleWithJson: (styles: React.CSSProperties) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
@@ -59,7 +59,7 @@ export function useCanvas() {
 }
 
 export default function CanvasProvider(props: {
-  elements: CanvasObject[];
+  elements: CanvasBlock[];
   children: React.ReactNode;
 }) {
   const { children } = props;
@@ -72,7 +72,7 @@ export default function CanvasProvider(props: {
     x: 0,
     y: 0,
   });
-  const [elements, setElements] = useState<CanvasObject[]>(props.elements);
+  const [elements, setElements] = useState<CanvasBlock[]>(props.elements);
   const [newRowData, setNewRowData] = useState<
     { screenId: string } | undefined
   >();
@@ -121,7 +121,7 @@ export default function CanvasProvider(props: {
 
   const selectedNode = useMemo(() => {
     if (!selectedElement) return;
-    let element: CanvasObject | undefined;
+    let element: CanvasBlock | undefined;
 
     return findElement(selectedElement.elementId, elements);
 
@@ -202,7 +202,7 @@ export default function CanvasProvider(props: {
   );
 
   const duplicateScreen = useCallback(
-    (screen: CanvasObject) => {
+    (screen: CanvasBlock) => {
       const newScreen = {
         ...screen,
         x: screen.x + 25,
@@ -320,8 +320,14 @@ export default function CanvasProvider(props: {
     [elements]
   );
 
-  const createBlock = (uiBlockId: string): CanvasObject => {
-    let blockType: BlockType = "block";
+  const createBlock = (uiBlockId: string): CanvasBlock => {
+    let blockType:
+      | "input"
+      | "button"
+      | "label"
+      | "header"
+      | "select"
+      | "table" = "input";
 
     if (uiBlockId === "ui-input") blockType = "input";
     if (uiBlockId === "ui-button") blockType = "button";
@@ -330,7 +336,7 @@ export default function CanvasProvider(props: {
     if (uiBlockId === "ui-select") blockType = "select";
     if (uiBlockId === "ui-table") blockType = "table";
 
-    const newBlock: CanvasObject = {
+    const newBlock: Partial<CanvasBlock> = {
       id: `block-${uuidv4()}`,
       x: 0,
       y: 0,
@@ -340,10 +346,10 @@ export default function CanvasProvider(props: {
       blockType,
     };
 
-    return newBlock;
+    return newBlock as CanvasBlock;
   };
 
-  const createScreen = (): CanvasObject => {
+  const createScreen = (): CanvasBlock => {
     return {
       id: `screen-${uuidv4()}`,
       x: 250,
@@ -395,9 +401,9 @@ export default function CanvasProvider(props: {
     const element = elements.find((element) => element.id === elementId);
     if (!element) return;
 
-    element.layout = {
-      display: layout,
-    };
+    // element.layout = {
+    //   display: layout,
+    // };
 
     setElements([...elements]);
   };
@@ -428,7 +434,7 @@ export default function CanvasProvider(props: {
     // }
 
     if (droppableElement) {
-      droppableElement.children.push(newRow);
+      //droppableElement.children.push(newRow);
       setElements([...elements]);
     }
 

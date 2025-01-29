@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { CanvasObject } from "../types";
+import { CanvasObject, CanvasBlock } from "../types";
 
 export const elements: CanvasObject[] = [
   {
@@ -798,7 +798,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
-                    colSpan: 8,
+                    colSpan: 7,
                     children: [
                       {
                         blockType: "header",
@@ -826,22 +826,74 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
-                    colSpan: 4,
+                    colSpan: 5,
                     children: [
                       {
-                        blockType: "input",
-                        id: `block-${uuidv4()}`,
+                        blockType: "grid-row",
+                        id: `grid-row-${uuidv4()}`,
                         x: 0,
                         y: 0,
-                        width: 200,
-                        height: 50,
-                        children: [],
-                        placeholder: "Searchbar",
+                        width: 400,
+                        height: 75,
+                        colNumber: 6,
+                        children: [
+                          {
+                            blockType: "grid-column",
+                            id: `grid-column-${uuidv4()}`,
+                            x: 0,
+                            y: 0,
+                            width: 200,
+                            height: 250,
+                            colSpan: 4,
+                            children: [
+                              {
+                                blockType: "input",
+                                id: `block-${uuidv4()}`,
+                                x: 0,
+                                y: 0,
+                                width: 200,
+                                height: 50,
+                                children: [],
+                                placeholder: "Searchbar",
+                                style: {
+                                  border: "none",
+                                  borderRadius: 0,
+                                  backgroundColor: "transparent",
+                                  borderBottom: "1px solid rgb(60, 72, 88)",
+                                },
+                              },
+                            ],
+                          },
+                          {
+                            blockType: "grid-column",
+                            id: `grid-column-${uuidv4()}`,
+                            x: 0,
+                            y: 0,
+                            width: 200,
+                            height: 250,
+                            colSpan: 2,
+                            children: [
+                              {
+                                blockType: "button",
+                                id: `block-${uuidv4()}`,
+                                x: 0,
+                                y: 0,
+                                width: 200,
+                                height: 50,
+                                children: [],
+                                text: "Add New",
+                                style: {
+                                  color: "white",
+                                  border: "none",
+                                  borderRadius: 5,
+                                  backgroundColor: "#4caf50",
+                                },
+                              },
+                            ],
+                          },
+                        ],
                         style: {
-                          border: "none",
-                          borderRadius: 0,
-                          backgroundColor: "transparent",
-                          borderBottom: "1px solid rgb(60, 72, 88)",
+                          gap: 10,
                         },
                       },
                     ],
