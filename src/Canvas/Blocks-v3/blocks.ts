@@ -12,7 +12,17 @@ export const elements: CanvasObject[] = [
     style: {
       backgroundColor: "#EFE1D1",
     },
-    children: [],
+    children: [
+      {
+        blockType: "custom",
+        id: `custom-${uuidv4()}`,
+        children: [],
+        x: 0,
+        y: 0,
+        width: 200,
+        height: 50,
+      },
+    ],
     blockType: "screen",
   },
   // {
