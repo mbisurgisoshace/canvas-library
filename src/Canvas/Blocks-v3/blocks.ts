@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from "uuid";
-import { CanvasObject, CanvasBlock } from "../types";
+import { CanvasBlock } from "../types";
 
-export const elements: CanvasObject[] = [
+export const elements: CanvasBlock[] = [
   {
     id: `screen-${uuidv4()}`,
     x: 250,
@@ -20,7 +20,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -30,7 +30,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -40,7 +40,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -50,7 +50,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -60,7 +60,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -69,6 +69,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
+            columnSpan: 1,
             children: [
               {
                 blockType: "header",
@@ -78,7 +79,6 @@ export const elements: CanvasObject[] = [
                 width: 200,
                 height: 50,
                 children: [],
-                colSpan: 1,
                 text: "Loja",
                 style: {
                   fontSize: 28,
@@ -96,7 +96,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -106,7 +106,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -116,7 +116,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -126,7 +126,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -136,7 +136,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -145,6 +145,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
+            columnSpan: 1,
             children: [
               {
                 blockType: "button",
@@ -154,7 +155,6 @@ export const elements: CanvasObject[] = [
                 width: 200,
                 height: 50,
                 children: [],
-                colSpan: 1,
                 text: "Login",
                 style: {
                   color: "white",
@@ -186,7 +186,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -196,7 +196,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -206,7 +206,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -216,7 +216,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -226,7 +226,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [],
       },
       {
@@ -236,7 +236,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -245,6 +245,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
+            columnSpan: 1,
             children: [
               {
                 blockType: "header",
@@ -254,7 +255,6 @@ export const elements: CanvasObject[] = [
                 width: 200,
                 height: 50,
                 children: [],
-                colSpan: 1,
                 text: "Login",
                 style: {
                   fontSize: 32,
@@ -274,7 +274,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -283,7 +283,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
-            colSpan: 2,
+            columnSpan: 2,
             children: [
               {
                 blockType: "input",
@@ -309,7 +309,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -318,7 +318,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
-            colSpan: 2,
+            columnSpan: 2,
             children: [
               {
                 blockType: "input",
@@ -344,7 +344,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 2,
+        columnNumber: 2,
         children: [
           {
             blockType: "grid-column",
@@ -353,7 +353,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
-            colSpan: 1,
+            columnSpan: 1,
             children: [],
           },
           {
@@ -363,7 +363,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
-            colSpan: 1,
+            columnSpan: 1,
             children: [
               {
                 blockType: "label",
@@ -373,7 +373,6 @@ export const elements: CanvasObject[] = [
                 width: 200,
                 height: 50,
                 children: [],
-                colSpan: 1,
                 text: "Forgot Password?",
                 style: {
                   width: "100%",
@@ -397,7 +396,7 @@ export const elements: CanvasObject[] = [
         y: 0,
         width: 400,
         height: 75,
-        colNumber: 1,
+        columnNumber: 1,
         children: [
           {
             blockType: "grid-column",
@@ -406,6 +405,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
+            columnSpan: 1,
             children: [
               {
                 blockType: "button",
@@ -415,7 +415,6 @@ export const elements: CanvasObject[] = [
                 width: 200,
                 height: 50,
                 children: [],
-                colSpan: 1,
                 text: "Continue",
                 style: {
                   color: "white",
@@ -449,8 +448,8 @@ export const elements: CanvasObject[] = [
         x: 0,
         y: 0,
         width: 400,
-        height: 750,
-        colNumber: 12,
+        height: 500,
+        columnNumber: 12,
         style: {
           padding: 0,
         },
@@ -462,6 +461,7 @@ export const elements: CanvasObject[] = [
             y: 0,
             width: 200,
             height: 250,
+            columnSpan: 3,
             children: [
               {
                 blockType: "grid-row",
@@ -470,7 +470,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                 },
@@ -482,6 +482,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "header",
@@ -491,7 +492,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Agri Dealer",
                         style: {
                           fontSize: 28,
@@ -510,7 +510,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                   borderTop: "1px solid white",
@@ -524,6 +524,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "header",
@@ -533,7 +534,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Loja",
                         style: {
                           fontSize: 28,
@@ -552,7 +552,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                 },
@@ -564,6 +564,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "icon",
@@ -582,7 +583,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Bayer Dealer Bucket",
                         style: {
                           fontSize: 20,
@@ -601,7 +601,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                   borderRadius: "3px",
@@ -615,6 +615,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "icon",
@@ -633,7 +634,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Customers",
                         style: {
                           fontSize: 20,
@@ -652,7 +652,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                 },
@@ -664,6 +664,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "header",
@@ -673,7 +674,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Inventory",
                         style: {
                           fontSize: 20,
@@ -692,7 +692,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                 },
@@ -704,6 +704,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "header",
@@ -713,7 +714,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Reports",
                         style: {
                           fontSize: 20,
@@ -732,7 +732,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 50,
-                colNumber: 1,
+                columnNumber: 1,
                 style: {
                   alignItems: "center",
                 },
@@ -744,6 +744,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "header",
@@ -753,7 +754,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Settings",
                         style: {
                           fontSize: 20,
@@ -766,7 +766,6 @@ export const elements: CanvasObject[] = [
                 ],
               },
             ],
-            colSpan: 3,
             style: {
               display: "flex",
               padding: "10px",
@@ -789,7 +788,7 @@ export const elements: CanvasObject[] = [
                 y: 0,
                 width: 400,
                 height: 75,
-                colNumber: 12,
+                columnNumber: 12,
                 children: [
                   {
                     blockType: "grid-column",
@@ -798,7 +797,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
-                    colSpan: 7,
+                    columnSpan: 7,
                     children: [
                       {
                         blockType: "header",
@@ -808,7 +807,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        colSpan: 1,
                         text: "Customers",
                         style: {
                           fontSize: 24,
@@ -826,7 +824,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
-                    colSpan: 5,
+                    columnSpan: 5,
                     children: [
                       {
                         blockType: "grid-row",
@@ -835,7 +833,7 @@ export const elements: CanvasObject[] = [
                         y: 0,
                         width: 400,
                         height: 75,
-                        colNumber: 6,
+                        columnNumber: 6,
                         children: [
                           {
                             blockType: "grid-column",
@@ -844,7 +842,7 @@ export const elements: CanvasObject[] = [
                             y: 0,
                             width: 200,
                             height: 250,
-                            colSpan: 4,
+                            columnSpan: 4,
                             children: [
                               {
                                 blockType: "input",
@@ -871,7 +869,7 @@ export const elements: CanvasObject[] = [
                             y: 0,
                             width: 200,
                             height: 250,
-                            colSpan: 2,
+                            columnSpan: 2,
                             children: [
                               {
                                 blockType: "button",
@@ -909,8 +907,8 @@ export const elements: CanvasObject[] = [
                 x: 0,
                 y: 0,
                 width: 400,
-                height: 650,
-                colNumber: 1,
+                height: 550,
+                columnNumber: 1,
                 children: [
                   {
                     blockType: "grid-column",
@@ -919,6 +917,7 @@ export const elements: CanvasObject[] = [
                     y: 0,
                     width: 200,
                     height: 250,
+                    columnSpan: 1,
                     children: [
                       {
                         blockType: "table",
@@ -928,7 +927,6 @@ export const elements: CanvasObject[] = [
                         width: 200,
                         height: 50,
                         children: [],
-                        placeholder: "Searchbar",
                         style: {
                           padding: 5,
                           border: "none",
@@ -967,8 +965,39 @@ export const elements: CanvasObject[] = [
                   alignContent: "flex-start",
                 },
               },
+              {
+                blockType: "grid-row",
+                id: `grid-row-${uuidv4()}`,
+                x: 0,
+                y: 0,
+                width: 400,
+                height: 100,
+                columnNumber: 1,
+                children: [
+                  {
+                    blockType: "grid-column",
+                    id: `grid-column-${uuidv4()}`,
+                    x: 0,
+                    y: 0,
+                    width: 400,
+                    height: 650,
+                    columnSpan: 1,
+                    children: [
+                      {
+                        blockType: "pagination",
+                        id: `pagination-${uuidv4()}`,
+                        x: 0,
+                        y: 0,
+                        width: 400,
+                        height: 50,
+                        children: [],
+                      },
+                    ],
+                  },
+                ],
+              },
             ],
-            colSpan: 9,
+            columnSpan: 9,
             style: {
               alignItems: "center",
             },

@@ -1,12 +1,14 @@
 import { useDraggable } from "@dnd-kit/core";
-import { CanvasObject } from "../types";
-import Block, { BlockProps } from "./Block";
+import { CanvasBlock, CanvasObject, Row as IRow } from "../types";
+import Block from "./Block";
 import { useCanvas } from "./CanvasContext";
 
-interface GridRowProps extends BlockProps {}
+interface GridRowProps {
+  canvasObject: IRow;
+}
 
 export default function GridRow({ canvasObject }: GridRowProps) {
-  const { id, height, children, colNumber, style } = canvasObject;
+  const { id, height, children, columnNumber, style } = canvasObject;
   const { selectElement, selectedElement } = useCanvas();
 
   const { attributes, listeners, setNodeRef } = useDraggable({
@@ -24,7 +26,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
         width: "100%",
         minHeight: height,
         alignContent: "stretch",
-        gridTemplateColumns: `repeat(${colNumber}, 1fr)`,
+        gridTemplateColumns: `repeat(${columnNumber}, 1fr)`,
         border: `1px solid ${
           selectedElement?.elementId === id ? "#0984e3" : "transparent"
         }`,
@@ -44,7 +46,7 @@ export default function GridRow({ canvasObject }: GridRowProps) {
       }}
     >
       {(children as CanvasObject[]).map((canvasObj) => (
-        <Block key={canvasObj.id} canvasObject={canvasObj} />
+        <Block key={canvasObj.id} canvasObject={canvasObj as CanvasBlock} />
       ))}
     </div>
   );

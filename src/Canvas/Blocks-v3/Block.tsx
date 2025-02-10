@@ -10,6 +10,7 @@ import Checkbox from "./Checkbox";
 import GridColumn from "./GridColumn";
 
 import { CanvasBlock } from "../types";
+import Pagination from "./Pagination";
 export interface BlockProps {
   canvasObject: CanvasBlock;
 }
@@ -53,6 +54,10 @@ export default function Block({ canvasObject }: BlockProps) {
 
   if (canvasObject.blockType === "button") {
     return <Button canvasObject={canvasObject} />;
+  }
+
+  if (canvasObject.blockType === "pagination") {
+    return <Pagination canvasObject={canvasObject} />;
   }
 
   return <div></div>;

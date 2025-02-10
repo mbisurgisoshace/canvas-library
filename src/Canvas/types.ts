@@ -24,7 +24,8 @@ export type BlockType =
   | "select"
   | "checkbox"
   | "grid-row"
-  | "grid-column";
+  | "grid-column"
+  | "pagination";
 export interface CanvasObject {
   x: number;
   y: number;
@@ -73,6 +74,11 @@ export interface Row extends Block {
   blockType: "grid-row";
   columnNumber: number;
 }
+
+export interface Icon extends Block {
+  blockType: "icon";
+}
+
 export interface Input extends Block {
   blockType: "input";
   placeholder?: string;
@@ -114,8 +120,13 @@ export interface Checkbox extends Block {
   label: string;
 }
 
+export interface Pagination extends Block {
+  blockType: "pagination";
+}
+
 export type CanvasBlock =
   | Row
+  | Icon
   | Input
   | Label
   | Table
@@ -124,4 +135,5 @@ export type CanvasBlock =
   | Header
   | Button
   | Column
-  | Checkbox;
+  | Checkbox
+  | Pagination;

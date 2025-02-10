@@ -1,16 +1,16 @@
 import { useDraggable } from "@dnd-kit/core";
 
 import { useCanvas } from "./CanvasContext";
-import { Button as IButton } from "../types";
+import { Pagination as IPagination } from "../types";
 
-interface ButtonProps {
-  canvasObject: IButton;
+interface PaginationProps {
+  canvasObject: IPagination;
 }
 
-export default function Button({ canvasObject }: ButtonProps) {
-  const { id, style, text } = canvasObject;
+export default function Pagination({ canvasObject }: PaginationProps) {
+  const { id, style } = canvasObject;
 
-  const { selectElement, selectedElement } = useCanvas();
+  const { selectElement } = useCanvas();
 
   const { attributes, listeners, setNodeRef, transform, isDragging } =
     useDraggable({
@@ -30,8 +30,6 @@ export default function Button({ canvasObject }: ButtonProps) {
           : undefined,
       }}
       onPointerDown={(e) => {
-        console.log("e", e);
-
         selectElement({ elementId: id });
 
         if (listeners && listeners.onPointerDown) {
@@ -41,17 +39,14 @@ export default function Button({ canvasObject }: ButtonProps) {
         }
       }}
     >
-      <button
-        className="p-1 w-full"
-        style={{
-          border: `1px solid ${
-            selectedElement?.elementId === id ? "#0984e3" : "transparent"
-          }`,
-          ...style,
-        }}
-      >
-        {text}
-      </button>
+      <div className="flex justify-between items-center bg-white p-1 rounded">
+        <button className="p-1 w-1/5">Previous</button>
+        <div>
+          <span>Page </span>
+          <span>1 of 1</span>
+        </div>
+        <button className="p-1 w-1/5">Next</button>
+      </div>
     </div>
   );
 }
