@@ -1,19 +1,19 @@
-interface InputOptions<E = Event> {
+interface InputOptions<C = Event, F = Event> {
   value?: string;
   disabled?: boolean;
   readonly?: boolean;
-  onBlur?: (event: E) => void;
-  onFocus?: (event: E) => void;
-  onChange?: (event: E) => void;
+  onBlur?: (event: F) => void;
+  onFocus?: (event: F) => void;
+  onChange?: (event: C) => void;
 }
 
-interface Input<E = Event> {
+interface Input<C = Event, F = Event, B = Event> {
   value: string;
   disabled?: boolean;
   readonly?: boolean;
-  handleBlur: (event: E) => void;
-  handleFocus: (event: E) => void;
-  handleChange: (event: E) => void;
+  handleBlur: (event: F) => void;
+  handleFocus: (event: F) => void;
+  handleChange: (event: C) => void;
   ariaProps: {
     role: string;
     "aria-disabled"?: string;
@@ -21,4 +21,6 @@ interface Input<E = Event> {
   };
 }
 
-export type InputFactory<E = Event> = (options: InputOptions<E>) => Input<E>;
+export type InputFactory<C = Event, F = Event> = (
+  options: InputOptions<C, F>
+) => Input<C, F>;
