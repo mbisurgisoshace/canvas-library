@@ -39,6 +39,25 @@ export default function StylingSidebar() {
                 }}
               />
             </div>
+
+            <div className="flex justify-between">
+              <label>Background Color</label>
+              <Popover>
+                <PopoverTrigger
+                  className={cn("size-4")}
+                  style={{
+                    backgroundColor:
+                      selectedNode?.style?.backgroundColor || "#FFFFFF",
+                  }}
+                ></PopoverTrigger>
+                <PopoverContent>
+                  <HexColorPicker
+                    color={selectedNode?.style?.backgroundColor || "#FFFFFF"}
+                    onChange={(color) => changeStyle("backgroundColor", color)}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
           </div>
         );
       case "grid-column":
@@ -46,20 +65,6 @@ export default function StylingSidebar() {
           <div className="flex gap-1 flex-col">
             <div className="flex justify-between">
               <label>Background Color</label>
-              {/* <select
-                value={selectedNode?.style?.backgroundColor || "white"}
-                defaultValue={"black"}
-                className="w-28"
-                onChange={(e) => {
-                  changeStyle("backgroundColor", e.target.value);
-                }}
-              >
-                <option value={"white"}>White</option>
-                <option value={"black"}>Black</option>
-                <option value={"blue"}>Blue</option>
-                <option value={"red"}>Red</option>
-                <option value={"green"}>Green</option>
-              </select> */}
               <Popover>
                 <PopoverTrigger
                   className={cn("size-4")}
