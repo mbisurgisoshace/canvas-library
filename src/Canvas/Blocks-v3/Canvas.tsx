@@ -38,6 +38,7 @@ import { Button } from "@/components/ui/button";
 import { db } from "@/firebase";
 import { useParams } from "react-router-dom";
 import CanvasDropdown from "../CanvasDropdown";
+import HierarchyTree from "./HierarchyMenu";
 
 interface CanvasDefaultProps {
   base: Base;
@@ -324,6 +325,8 @@ export default function CanvasModule(props: CanvasProps) {
 
           <div className="h-[1px] w-full bg-slate-300 my-3" />
 
+          <HierarchyTree />
+
           <Dialog>
             <DialogTrigger className="mt-5 p-2 bg-slate-700 text-white rounded-md py-2 px-4 w-full">
               Features
@@ -356,8 +359,8 @@ export default function CanvasModule(props: CanvasProps) {
           <Dialog
             open={!!newRowData}
             onOpenChange={() => {
-              setRowLayout("");
               setNewRowData(undefined);
+              setRowLayout({ layout: "", height: "" });
             }}
           >
             <DialogContent>
@@ -371,11 +374,32 @@ export default function CanvasModule(props: CanvasProps) {
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
+                    id="1"
+                    className="flex items-center space-x-2"
+                    value="1"
+                    checked={rowLayout?.layout === "1"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
+                  />
+                  <Label>1</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
                     id="2-4"
                     className="flex items-center space-x-2"
                     value="2-4"
-                    checked={rowLayout === "2-4"}
-                    onChange={(e) => setRowLayout(e.target.value)}
+                    checked={rowLayout?.layout === "2-4"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
                   />
                   <Label>2-4</Label>
                 </div>
@@ -385,8 +409,13 @@ export default function CanvasModule(props: CanvasProps) {
                     id="3-3"
                     className="flex items-center space-x-2"
                     value="3-3"
-                    checked={rowLayout === "3-3"}
-                    onChange={(e) => setRowLayout(e.target.value)}
+                    checked={rowLayout?.layout === "3-3"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
                   />
                   <Label>3-3</Label>
                 </div>
@@ -396,20 +425,75 @@ export default function CanvasModule(props: CanvasProps) {
                     id="4-2"
                     className="flex items-center space-x-2"
                     value="4-2"
-                    checked={rowLayout === "4-2"}
-                    onChange={(e) => setRowLayout(e.target.value)}
+                    checked={rowLayout?.layout === "4-2"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
                   />
                   <Label>4-2</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
+                    id="3-9"
+                    value="3-9"
+                    checked={rowLayout?.layout === "3-9"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
+                  />
+                  <Label>3-9</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
                     id="2-2-2"
                     value="2-2-2"
-                    checked={rowLayout === "2-2-2"}
-                    onChange={(e) => setRowLayout(e.target.value)}
+                    checked={rowLayout?.layout === "2-2-2"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
                   />
                   <Label>2-2-2</Label>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <label>Row Height</label>
+                  <input
+                    type="number"
+                    className="border border-slate-700 rounded-md px-2"
+                    value={rowLayout.height}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        height: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <label>Column Number</label>
+                  <input
+                    type="number"
+                    className="border border-slate-700 rounded-md px-2"
+                    value={rowLayout.columnNumber}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        columnNumber: e.target.value,
+                      })
+                    }
+                  />
                 </div>
               </div>
               <DialogFooter>

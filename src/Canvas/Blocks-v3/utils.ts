@@ -20,3 +20,17 @@ export const findElement = (
     }
   }
 };
+
+export const traverseAllElements = (elements: CanvasBlock[]) => {
+  const allElements: CanvasBlock[] = [];
+
+  elements.forEach((element) => {
+    allElements.push(element);
+
+    if (element.children.length > 0) {
+      allElements.push(...traverseAllElements(element.children));
+    }
+  });
+
+  return allElements;
+};

@@ -8,12 +8,18 @@ import {
   useMemo,
 } from "react";
 
-import { BlockType, CanvasBlock, CanvasObject } from "../types";
+import { BlockType, CanvasBlock, CanvasObject, Header, Input } from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent } from "@dnd-kit/core";
 import { findElement } from "./utils";
 
 type SelectedElement = { elementId: string; parentId?: string };
+
+type RowLayout = {
+  layout: string;
+  height: string;
+  columnNumber: string;
+};
 
 type CanvasContextType = {
   elements: CanvasBlock[];
@@ -43,12 +49,13 @@ type CanvasContextType = {
   selectedNode: CanvasBlock | undefined;
   newRowData: { screenId: string } | undefined;
   setNewRowData: (data: { screenId: string } | undefined) => void;
-  rowLayout: string | undefined;
-  setRowLayout: (layout: string) => void;
+  rowLayout: RowLayout;
+  setRowLayout: (rowLayout: RowLayout) => void;
   onCreateRow: () => void;
   onChangeRowHeight: (height: number) => void;
   duplicateScreen: (screen: CanvasBlock) => void;
   applyStyleWithJson: (styles: React.CSSProperties) => void;
+  changeProp: (prop: any, value: any) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
 };
 
@@ -76,7 +83,11 @@ export default function CanvasProvider(props: {
   const [newRowData, setNewRowData] = useState<
     { screenId: string } | undefined
   >();
-  const [rowLayout, setRowLayout] = useState<string | undefined>("");
+  const [rowLayout, setRowLayout] = useState<RowLayout>({
+    layout: "",
+    height: "",
+    columnNumber: "",
+  });
 
   const unselectElement = () => selectElement(null);
 
@@ -140,6 +151,19 @@ export default function CanvasProvider(props: {
 
     return element;
   }, [elements, selectedElement]);
+
+  const changeProp = useCallback(
+    (prop: keyof CanvasBlock, value: any) => {
+      if (!selectedElement) return;
+      const element = findElement(selectedElement.elementId!, elements);
+
+      if (element) {
+        element[prop] = value;
+        setElements([...elements]);
+      }
+    },
+    [elements, selectedElement]
+  );
 
   const changeStyle = useCallback(
     (styleProp: string, stylePropValue: string | number) => {
@@ -329,10 +353,11 @@ export default function CanvasProvider(props: {
       | "select"
       | "table" = "input";
 
-    if (uiBlockId === "ui-input") blockType = "input";
+    if (uiBlockId === "ui-input") return createInputBlock();
     if (uiBlockId === "ui-button") blockType = "button";
     if (uiBlockId === "ui-label") blockType = "label";
-    if (uiBlockId === "ui-header") blockType = "header";
+    if (uiBlockId === "ui-header") return createHeaderBlock();
+
     if (uiBlockId === "ui-select") blockType = "select";
     if (uiBlockId === "ui-table") blockType = "table";
 
@@ -354,11 +379,36 @@ export default function CanvasProvider(props: {
       id: `screen-${uuidv4()}`,
       x: 250,
       y: 100,
-      width: 400,
+      width: 1024,
       height: 750,
       title: "New Screen",
       children: [],
       blockType: "screen",
+    };
+  };
+
+  const createInputBlock = (): Input => {
+    return {
+      id: `block-${uuidv4()}`,
+      x: 0,
+      y: 0,
+      width: 150,
+      height: 32,
+      children: [],
+      blockType: "input",
+    };
+  };
+
+  const createHeaderBlock = (): Header => {
+    return {
+      id: `block-${uuidv4()}`,
+      x: 0,
+      y: 0,
+      width: 150,
+      height: 32,
+      text: "Header",
+      children: [],
+      blockType: "header",
     };
   };
 
@@ -411,18 +461,22 @@ export default function CanvasProvider(props: {
   const onCreateRow = () => {
     if (!newRowData) return;
 
-    const newRow: CanvasObject = {
+    const newRow: CanvasBlock = {
       blockType: "grid-row",
       id: `grid-row-${uuidv4()}`,
       x: 0,
       y: 0,
       width: 400,
-      height: 75,
-      colNumber: 6,
-      children: createColumnsLayout(rowLayout!),
+      children: createColumnsLayout(rowLayout.layout),
+      height: rowLayout.height ? parseInt(rowLayout.height) : 75,
+      columnNumber: rowLayout.columnNumber
+        ? parseInt(rowLayout.columnNumber)
+        : 12,
     };
 
     const droppableElement = findElement(newRowData.screenId!, elements);
+
+    console.log("droppableElement", droppableElement);
 
     // const screen = elements.find(
     //   (element) => element.id === newRowData?.screenId
@@ -434,22 +488,35 @@ export default function CanvasProvider(props: {
     // }
 
     if (droppableElement) {
-      //droppableElement.children.push(newRow);
+      droppableElement.children.push(newRow);
       setElements([...elements]);
     }
 
-    setRowLayout(undefined);
     setNewRowData(undefined);
+    setRowLayout({ layout: "", height: "" });
   };
 
-  const createColumnsLayout = (rowLayout: string): CanvasObject[] => {
-    const cols: CanvasObject[] = [];
+  const createColumnsLayout = (rowLayout: string): CanvasBlock[] => {
+    const cols: CanvasBlock[] = [];
+
+    if (rowLayout === "1") {
+      cols.push({
+        x: 0,
+        y: 0,
+        columnSpan: 1,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
 
     if (rowLayout === "2-4") {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 2,
+        columnSpan: 2,
         width: 200,
         height: 75,
         children: [],
@@ -460,7 +527,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 4,
+        columnSpan: 4,
         width: 200,
         height: 75,
         children: [],
@@ -473,7 +540,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 3,
+        columnSpan: 3,
         width: 200,
         height: 75,
         children: [],
@@ -484,7 +551,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 3,
+        columnSpan: 3,
         width: 200,
         height: 75,
         children: [],
@@ -497,7 +564,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 4,
+        columnSpan: 4,
         width: 200,
         height: 75,
         children: [],
@@ -508,7 +575,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 2,
+        columnSpan: 2,
         width: 200,
         height: 75,
         children: [],
@@ -521,7 +588,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 2,
+        columnSpan: 2,
         width: 200,
         height: 75,
         children: [],
@@ -532,7 +599,7 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 2,
+        columnSpan: 2,
         width: 200,
         height: 75,
         children: [],
@@ -543,7 +610,31 @@ export default function CanvasProvider(props: {
       cols.push({
         x: 0,
         y: 0,
-        colSpan: 2,
+        columnSpan: 2,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    if (rowLayout === "3-9") {
+      cols.push({
+        x: 0,
+        y: 0,
+        columnSpan: 3,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        columnSpan: 9,
         width: 200,
         height: 75,
         children: [],
@@ -581,6 +672,7 @@ export default function CanvasProvider(props: {
     onDragEnd,
     rowLayout,
     setLayout,
+    changeProp,
     newRowData,
     onResizing,
     onCreateRow,

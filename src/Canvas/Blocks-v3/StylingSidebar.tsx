@@ -1,11 +1,23 @@
 import { useRef } from "react";
 import { useCanvas } from "./CanvasContext";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { HexColorPicker } from "react-colorful";
+import { cn } from "@/lib/utils";
 
 export default function StylingSidebar() {
   const ref = useRef<HTMLTextAreaElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { changeStyle, selectedNode, applyStyleWithJson, onChangeRowHeight } =
-    useCanvas();
+  const {
+    changeProp,
+    changeStyle,
+    selectedNode,
+    applyStyleWithJson,
+    onChangeRowHeight,
+  } = useCanvas();
 
   const renderStylingBar = () => {
     if (!selectedNode) return;
@@ -26,6 +38,43 @@ export default function StylingSidebar() {
                   }
                 }}
               />
+            </div>
+          </div>
+        );
+      case "grid-column":
+        return (
+          <div className="flex gap-1 flex-col">
+            <div className="flex justify-between">
+              <label>Background Color</label>
+              {/* <select
+                value={selectedNode?.style?.backgroundColor || "white"}
+                defaultValue={"black"}
+                className="w-28"
+                onChange={(e) => {
+                  changeStyle("backgroundColor", e.target.value);
+                }}
+              >
+                <option value={"white"}>White</option>
+                <option value={"black"}>Black</option>
+                <option value={"blue"}>Blue</option>
+                <option value={"red"}>Red</option>
+                <option value={"green"}>Green</option>
+              </select> */}
+              <Popover>
+                <PopoverTrigger
+                  className={cn("size-4")}
+                  style={{
+                    backgroundColor:
+                      selectedNode?.style?.backgroundColor || "#FFFFFF",
+                  }}
+                ></PopoverTrigger>
+                <PopoverContent>
+                  <HexColorPicker
+                    color={selectedNode?.style?.backgroundColor || "#FFFFFF"}
+                    onChange={(color) => changeStyle("backgroundColor", color)}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         );
@@ -84,6 +133,14 @@ export default function StylingSidebar() {
         return (
           <div className="flex gap-1 flex-col">
             <div className="flex justify-between">
+              <label>Text</label>
+              <input
+                className="w-28"
+                value={selectedNode.text}
+                onChange={(e) => changeProp("text", e.target.value)}
+              />
+            </div>
+            <div className="flex justify-between">
               <label>Font Size</label>
               <select
                 value={selectedNode?.style?.fontSize || 14}
@@ -117,19 +174,20 @@ export default function StylingSidebar() {
 
             <div className="flex justify-between">
               <label>Font Color</label>
-              <select
-                value={selectedNode?.style?.color || "black"}
-                defaultValue={"black"}
-                className="w-28"
-                onChange={(e) => {
-                  changeStyle("color", e.target.value);
-                }}
-              >
-                <option value={"black"}>Black</option>
-                <option value={"blue"}>Blue</option>
-                <option value={"red"}>Red</option>
-                <option value={"green"}>Green</option>
-              </select>
+              <Popover>
+                <PopoverTrigger
+                  className={cn("size-4")}
+                  style={{
+                    backgroundColor: selectedNode?.style?.color || "#FFFFFF",
+                  }}
+                ></PopoverTrigger>
+                <PopoverContent>
+                  <HexColorPicker
+                    color={selectedNode?.style?.color || "#FFFFFF"}
+                    onChange={(color) => changeStyle("color", color)}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
         );

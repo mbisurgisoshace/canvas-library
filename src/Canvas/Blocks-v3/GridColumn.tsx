@@ -3,6 +3,7 @@ import { useDroppable } from "@dnd-kit/core";
 import Block from "./Block";
 import { useEffect, useState } from "react";
 import { CanvasBlock, CanvasObject, Column as IColumn } from "../types";
+import { useCanvas } from "./CanvasContext";
 
 interface GridColumnProps {
   canvasObject: IColumn;
@@ -10,6 +11,7 @@ interface GridColumnProps {
 
 export default function GridColumn({ canvasObject }: GridColumnProps) {
   const [ref, setNodeRef] = useState<HTMLDivElement | null>(null);
+  const { selectElement, selectedElement } = useCanvas();
   const { id, children, columnSpan, style } = canvasObject;
 
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
@@ -29,9 +31,17 @@ export default function GridColumn({ canvasObject }: GridColumnProps) {
       id={id}
       style={{
         gridColumn: `span ${columnSpan}`,
+        border: `1px solid ${
+          selectedElement?.elementId === id ? "#0984e3" : "transparent"
+        }`,
         ...style,
       }}
       className={`flex-1 ${isOver ? "!bg-red-500/20" : ""} column`}
+      onPointerDown={(e) => {
+        console.log("e", e);
+
+        selectElement({ elementId: id });
+      }}
     >
       {/* {children.length > 0 && <Block canvasObject={children[0]} />} */}
       {(children as CanvasObject[]).map((canvasObj) => (
