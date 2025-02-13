@@ -192,7 +192,9 @@ export default function CanvasProvider(props: {
       if (element) {
         element.style = {
           ...element.style,
-          [styleProp]: stylePropValue,
+          [styleProp]: isNaN(stylePropValue as number)
+            ? stylePropValue
+            : parseInt(stylePropValue as string),
         };
 
         setElements([...elements]);
@@ -635,6 +637,30 @@ export default function CanvasProvider(props: {
         x: 0,
         y: 0,
         columnSpan: 9,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+    }
+
+    if (rowLayout === "7-5") {
+      cols.push({
+        x: 0,
+        y: 0,
+        columnSpan: 7,
+        width: 200,
+        height: 75,
+        children: [],
+        blockType: "grid-column",
+        id: `grid-col-${uuidv4()}`,
+      });
+
+      cols.push({
+        x: 0,
+        y: 0,
+        columnSpan: 5,
         width: 200,
         height: 75,
         children: [],

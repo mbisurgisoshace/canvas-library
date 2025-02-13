@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/popover";
 import { HexColorPicker } from "react-colorful";
 import { cn } from "@/lib/utils";
+import { Slider } from "@/components/ui/slider";
 
 export default function StylingSidebar() {
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -86,20 +87,27 @@ export default function StylingSidebar() {
       case "label":
         return (
           <div className="flex gap-1 flex-col">
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <label>Font Size</label>
-              <select
-                value={selectedNode?.style?.fontSize || 14}
-                defaultValue={14}
-                className="w-28"
-                onChange={(e) => {
-                  changeStyle("fontSize", e.target.value);
-                }}
-              >
-                <option value={"14px"}>14</option>
-                <option value={"18px"}>18</option>
-                <option value={"24px"}>24</option>
-              </select>
+              <div className="w-[60%] flex items-center">
+                <Slider
+                  value={[
+                    selectedNode?.style?.fontSize
+                      ? parseInt(selectedNode?.style?.fontSize as string)
+                      : 14,
+                  ]}
+                  defaultValue={[14]}
+                  min={8}
+                  max={100}
+                  step={1}
+                  onValueChange={(value) => {
+                    changeStyle("fontSize", `${value[0]}`);
+                  }}
+                />
+                <span className="ml-1 font-semibold text-sm">
+                  {selectedNode?.style?.fontSize}
+                </span>
+              </div>
             </div>
 
             <div className="flex justify-between">
@@ -145,20 +153,27 @@ export default function StylingSidebar() {
                 onChange={(e) => changeProp("text", e.target.value)}
               />
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between items-center">
               <label>Font Size</label>
-              <select
-                value={selectedNode?.style?.fontSize || 14}
-                defaultValue={14}
-                className="w-28"
-                onChange={(e) => {
-                  changeStyle("fontSize", e.target.value);
-                }}
-              >
-                <option value={"14px"}>14</option>
-                <option value={"18px"}>18</option>
-                <option value={"24px"}>24</option>
-              </select>
+              <div className="w-[60%] flex items-center">
+                <Slider
+                  value={[
+                    selectedNode?.style?.fontSize
+                      ? parseInt(selectedNode?.style?.fontSize as string)
+                      : 14,
+                  ]}
+                  defaultValue={[14]}
+                  min={8}
+                  max={100}
+                  step={1}
+                  onValueChange={(value) => {
+                    changeStyle("fontSize", `${value[0]}`);
+                  }}
+                />
+                <span className="ml-1 font-semibold text-sm">
+                  {selectedNode?.style?.fontSize}
+                </span>
+              </div>
             </div>
 
             <div className="flex justify-between">

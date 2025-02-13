@@ -453,6 +453,21 @@ export default function CanvasModule(props: CanvasProps) {
                 <div className="flex items-center space-x-2">
                   <input
                     type="radio"
+                    id="7-5"
+                    value="7-5"
+                    checked={rowLayout?.layout === "7-5"}
+                    onChange={(e) =>
+                      setRowLayout({
+                        ...rowLayout,
+                        layout: e.target.value,
+                      })
+                    }
+                  />
+                  <Label>7-5</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="radio"
                     id="2-2-2"
                     value="2-2-2"
                     checked={rowLayout?.layout === "2-2-2"}

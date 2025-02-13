@@ -18,9 +18,7 @@ export default function HierarchyTree() {
 
   const items = useMemo(() => {
     const treeElements: Record<string, any> = {};
-    console.log("elements", elements.length);
     const allElements = traverseAllElements(elements);
-    console.log("allElements", allElements.length);
     const root = {
       index: "root",
       isFolder: true,
