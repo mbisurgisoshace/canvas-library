@@ -124,6 +124,23 @@ export interface Pagination extends Block {
   blockType: "pagination";
 }
 
+interface GridLayout {
+  layoutType: "grid";
+  gridColumns: number;
+}
+
+interface FlexLayout {
+  layoutType: "flex";
+  flexDirection: "row" | "column";
+}
+
+type Display = GridLayout | FlexLayout;
+
+export interface Layout extends Block {
+  blockType: "layout";
+  layoutDisplay?: Display;
+}
+
 export type CanvasBlock =
   | Row
   | Icon
@@ -135,5 +152,6 @@ export type CanvasBlock =
   | Header
   | Button
   | Column
+  | Layout
   | Checkbox
   | Pagination;
