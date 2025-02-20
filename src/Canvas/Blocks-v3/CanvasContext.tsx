@@ -302,6 +302,11 @@ export default function CanvasProvider(props: {
         const droppableElement = findElement(overId as string, elements);
 
         if (droppableElement) {
+          if (id.toString() === "ui-layout") {
+            const newLayout = createLayout();
+            droppableElement.children.push(newLayout);
+          }
+
           if (id.toString().includes("block-")) {
             // It is an element already on the screen
             const existingElement = findElement(id.toString(), elements);
@@ -458,6 +463,20 @@ export default function CanvasProvider(props: {
     // };
 
     setElements([...elements]);
+  };
+
+  const createLayout = () => {
+    const newLayout: CanvasBlock = {
+      blockType: "layout",
+      id: `layout-${uuidv4()}`,
+      x: 0,
+      y: 0,
+      width: 400,
+      height: 400,
+      children: [],
+    };
+
+    return newLayout;
   };
 
   const onCreateRow = () => {

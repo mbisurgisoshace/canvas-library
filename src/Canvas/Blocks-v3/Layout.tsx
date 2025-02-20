@@ -1,9 +1,9 @@
 import { useDroppable } from "@dnd-kit/core";
+import { useEffect, useMemo, useState } from "react";
 
 import Block from "./Block";
-import { useEffect, useMemo, useState } from "react";
-import { CanvasBlock, CanvasObject, Layout as ILayout } from "../types";
 import { useCanvas } from "./CanvasContext";
+import { CanvasBlock, CanvasObject, Layout as ILayout } from "../types";
 
 interface LayoutProps {
   canvasObject: ILayout;
@@ -59,7 +59,6 @@ export default function Layout({ canvasObject }: LayoutProps) {
         selectElement({ elementId: id });
       }}
     >
-      {/* {children.length > 0 && <Block canvasObject={children[0]} />} */}
       {(children as CanvasObject[]).map((canvasObj) => (
         <Block key={canvasObj.id} canvasObject={canvasObj as CanvasBlock} />
       ))}

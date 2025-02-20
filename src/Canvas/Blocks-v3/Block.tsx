@@ -11,6 +11,7 @@ import GridColumn from "./GridColumn";
 
 import { CanvasBlock } from "../types";
 import Pagination from "./Pagination";
+import Layout from "./Layout";
 export interface BlockProps {
   canvasObject: CanvasBlock;
 }
@@ -58,6 +59,10 @@ export default function Block({ canvasObject }: BlockProps) {
 
   if (canvasObject.blockType === "pagination") {
     return <Pagination canvasObject={canvasObject} />;
+  }
+
+  if (canvasObject.blockType === "layout") {
+    return <Layout canvasObject={canvasObject} />;
   }
 
   return <div></div>;

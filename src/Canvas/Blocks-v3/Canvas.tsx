@@ -71,6 +71,14 @@ const LAYOUT_BLOCKS = [
       </div>
     ),
   },
+  {
+    id: "ui-layout",
+    uiComponent: (
+      <div className="border border-slate-700 h-10 w-full flex items-center justify-center">
+        Layout
+      </div>
+    ),
+  },
 ];
 
 const UI_BLOCKS = [
