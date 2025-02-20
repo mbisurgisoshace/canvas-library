@@ -305,6 +305,8 @@ export default function CanvasProvider(props: {
           if (id.toString() === "ui-layout") {
             const newLayout = createLayout();
             droppableElement.children.push(newLayout);
+            setElements([...elements]);
+            return;
           }
 
           if (id.toString().includes("block-")) {

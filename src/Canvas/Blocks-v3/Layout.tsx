@@ -12,7 +12,7 @@ interface LayoutProps {
 export default function Layout({ canvasObject }: LayoutProps) {
   const [ref, setNodeRef] = useState<HTMLDivElement | null>(null);
   const { selectElement, selectedElement } = useCanvas();
-  const { id, children, style, layoutDisplay } = canvasObject;
+  const { id, children, style, layoutDisplay, height } = canvasObject;
 
   const { isOver, setNodeRef: setDroppableRef } = useDroppable({
     id,
@@ -46,13 +46,14 @@ export default function Layout({ canvasObject }: LayoutProps) {
       ref={combinedRef}
       id={id}
       style={{
+        height,
         border: `1px solid ${
           selectedElement?.elementId === id ? "#0984e3" : "transparent"
         }`,
         ...style,
         ...layoutDisplay,
       }}
-      className={`flex-1 ${isOver ? "!bg-red-500/20" : ""} column`}
+      className={`${isOver ? "!bg-red-500/20" : ""}`}
       onPointerDown={(e) => {
         console.log("e", e);
 
