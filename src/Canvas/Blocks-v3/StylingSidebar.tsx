@@ -16,6 +16,7 @@ export default function StylingSidebar() {
     changeProp,
     changeStyle,
     selectedNode,
+    applyDataWithJson,
     applyStyleWithJson,
     onChangeRowHeight,
   } = useCanvas();
@@ -226,6 +227,25 @@ export default function StylingSidebar() {
                   />
                 </PopoverContent>
               </Popover>
+            </div>
+          </div>
+        );
+      case "advanced-card-list":
+        return (
+          <div>
+            <div className="flex flex-col mt-3">
+              <label>Apply data with JSON</label>
+              <textarea ref={ref}></textarea>
+              <button
+                className="mt-1"
+                onClick={() => {
+                  const value = ref.current?.value;
+                  const data = JSON.parse(value || "[]");
+                  applyDataWithJson(data);
+                }}
+              >
+                Apply Data
+              </button>
             </div>
           </div>
         );

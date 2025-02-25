@@ -141,6 +141,17 @@ export interface Layout extends Block {
   layoutDisplay?: Display;
 }
 
+interface CardItem {
+  name: string;
+  address?: string;
+  phoneNumber?: string;
+  isPostcardList: boolean;
+}
+export interface AdvancedCardList extends Block {
+  blockType: "advanced-card-list";
+  data: CardItem[];
+}
+
 export type CanvasBlock =
   | Row
   | Icon
@@ -154,4 +165,5 @@ export type CanvasBlock =
   | Column
   | Layout
   | Checkbox
-  | Pagination;
+  | Pagination
+  | AdvancedCardList;

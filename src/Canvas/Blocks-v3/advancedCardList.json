@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Jane Brown",
+    "isPostcardList": true
+  },
+  {
+    "name": "Stella Smith",
+    "address": "1234 Elm Street, Apt 56B, Springfield, IL 62704",
+    "phoneNumber": "+380462918462",
+    "isPostcardList": true
+  },
+  {
+    "name": "Tim Cooper",
+    "address": "1234 Elm Street, Apt 56B, Springfield, IL 62704",
+    "phoneNumber": "+380462918462",
+    "isPostcardList": true
+  },
+  {
+    "name": "John Doe",
+    "address": "1234 Elm Street, Apt 56B, Springfield, IL 62704",
+    "isPostcardList": true
+  }
+]

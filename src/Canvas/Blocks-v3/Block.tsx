@@ -12,6 +12,7 @@ import GridColumn from "./GridColumn";
 import { CanvasBlock } from "../types";
 import Pagination from "./Pagination";
 import Layout from "./Layout";
+import AdvancedCardList from "./AdvancedCardList";
 export interface BlockProps {
   canvasObject: CanvasBlock;
 }
@@ -63,6 +64,10 @@ export default function Block({ canvasObject }: BlockProps) {
 
   if (canvasObject.blockType === "layout") {
     return <Layout canvasObject={canvasObject} />;
+  }
+
+  if (canvasObject.blockType === "advanced-card-list") {
+    return <AdvancedCardList canvasObject={canvasObject} />;
   }
 
   return <div></div>;

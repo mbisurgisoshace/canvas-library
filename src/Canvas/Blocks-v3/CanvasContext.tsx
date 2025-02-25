@@ -8,7 +8,14 @@ import {
   useMemo,
 } from "react";
 
-import { BlockType, CanvasBlock, CanvasObject, Header, Input } from "../types";
+import {
+  BlockType,
+  CanvasBlock,
+  CanvasDataBlocks,
+  CanvasObject,
+  Header,
+  Input,
+} from "../types";
 import { Direction } from "re-resizable/lib/resizer";
 import { DragEndEvent } from "@dnd-kit/core";
 import { findElement } from "./utils";
@@ -54,6 +61,7 @@ type CanvasContextType = {
   onCreateRow: () => void;
   onChangeRowHeight: (height: number) => void;
   duplicateScreen: (screen: CanvasBlock) => void;
+  applyDataWithJson: (data: any) => void;
   applyStyleWithJson: (styles: React.CSSProperties) => void;
   changeProp: (prop: any, value: any) => void;
   changeStyle: (styleProp: string, stylePropValue: string) => void;
@@ -221,6 +229,19 @@ export default function CanvasProvider(props: {
           ...styles,
         };
 
+        setElements([...elements]);
+      }
+    },
+    [elements, selectedElement]
+  );
+
+  const applyDataWithJson = useCallback(
+    (data: any) => {
+      if (!selectedElement) return;
+      const element: any = findElement(selectedElement.elementId!, elements);
+
+      if (element) {
+        element.data = data;
         setElements([...elements]);
       }
     },
@@ -734,6 +755,7 @@ export default function CanvasProvider(props: {
     isChangingStyle,
     selectedElement,
     unselectElement,
+    applyDataWithJson,
     onChangeRowHeight,
     applyStyleWithJson,
   };
